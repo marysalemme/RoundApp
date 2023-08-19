@@ -25,10 +25,10 @@ class TransactionsViewModel {
     
     // MARK: - Dependencies
     
-    var repository: StarlingRepositoryType
+    private let repository: StarlingRepositoryType
     
     /// The dispose bag for the view model. Used to dispose of any subscriptions.
-    var disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
     
     // MARK: - Initializer
     init(repository: StarlingRepositoryType) {
@@ -36,7 +36,7 @@ class TransactionsViewModel {
         loadAccountTransactions()
     }
     
-    func loadAccountTransactions() {
+    private func loadAccountTransactions() {
         // TODO: Add loading
         repository.getPrimaryAccount()
             .flatMap { account -> Single<[FeedItem]> in

@@ -8,6 +8,7 @@ target 'RoundApp' do
   # Pods for RoundApp
   pod 'RxSwift'
   pod 'RxCocoa'
+  pod 'SnapKit'
 
   target 'RoundAppTests' do
     inherit! :search_paths
