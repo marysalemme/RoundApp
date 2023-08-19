@@ -58,7 +58,7 @@ class TransactionsViewController: UIViewController {
         
         viewModel.transactions.asObservable()
             .bind(to: tableView.rx.items(cellIdentifier: "cell")) { row, model, cell in
-                cell.textLabel?.text = "\(model.amount.minorUnits), \(model.transactionTime)"
+                cell.textLabel?.text = "\(model.amount.minorUnits.toDecimal()) \(model.transactionTime.formatToString())"
                 cell.textLabel?.numberOfLines = 0
                 cell.selectionStyle = .none
             }.disposed(by: disposeBag)

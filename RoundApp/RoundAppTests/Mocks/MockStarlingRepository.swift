@@ -15,14 +15,15 @@ class MockStarlingRepository: StarlingRepositoryType {
                                    accountType: "PRIMARY",
                                    defaultCategory: "123123",
                                    currency: "GBP",
-                                   createdAt: "2023-08-18T11:37:14.893Z",
                                    name: "Personal"))
     }
     
     func getTransactions(accountID: String, categoryID: String, sinceDate: String) -> Single<[FeedItem]> {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
         return Single.just([
-            FeedItem(feedItemUid: "123", categoryUid: "123123", amount: Amount(currency: "GBP", minorUnits: 2300), direction: "OUT", transactionTime: "2023-08-18T16:37:14.893Z"),
-            FeedItem(feedItemUid: "123", categoryUid: "123123", amount: Amount(currency: "GBP", minorUnits: 340), direction: "OUT", transactionTime: "2023-08-19T12:37:14.893Z")
+            FeedItem(feedItemUid: "123", categoryUid: "123123", amount: Amount(currency: "GBP", minorUnits: 2300), direction: "OUT", transactionTime:  dateFormatter.date(from: "2023-08-19T12:37:14.893Z")!),
+            FeedItem(feedItemUid: "123", categoryUid: "123123", amount: Amount(currency: "GBP", minorUnits: 340), direction: "OUT", transactionTime:  dateFormatter.date(from: "2023-08-19T12:37:14.893Z")!)
         ])
     }
 }
