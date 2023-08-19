@@ -18,6 +18,11 @@ class TransactionsViewModel {
         return _screenTitle.asDriver()
     }
     
+    private let _transactions = BehaviorRelay<[FeedItem]>(value: [])
+    var transactions: Driver<[FeedItem]> {
+        return _transactions.asDriver()
+    }
+    
     // MARK: - Dependencies
     
     var repository: StarlingRepositoryType
@@ -28,15 +33,21 @@ class TransactionsViewModel {
     // MARK: - Initializer
     init(repository: StarlingRepositoryType) {
         self.repository = repository
-        loadAccount()
+        loadAccountTransactions()
     }
     
-    func loadAccount() {
+    func loadAccountTransactions() {
+        // TODO: Add loading
         repository.getPrimaryAccount()
+            .flatMap { account -> Single<[FeedItem]> in
+                self._screenTitle.accept("\(account.name) Account")
+                return self.repository.getTransactions(accountID: account.accountUid, categoryID: account.defaultCategory, sinceDate: "2023-08-18T11:37:14.893Z")
+            }
             .subscribe { event in
                 switch event {
-                case .success(let account):
-                    self._screenTitle.accept("\(account.name) Account")
+                case .success(let transactions):
+                    self._transactions.accept(transactions)
+                    print(transactions)
                 case .failure(let error):
                     // TODO: Handle error
                     print(error)

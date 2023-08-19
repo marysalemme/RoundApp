@@ -10,6 +10,7 @@ import RxSwift
 
 protocol StarlingRepositoryType {
     func getPrimaryAccount() -> Single<Account>
+    func getTransactions(accountID: String, categoryID: String, sinceDate: String) -> Single<[FeedItem]>
 }
 
 /// A repository that is used to fetch data from the Starling API.
@@ -26,19 +27,35 @@ class StarlingRepository: StarlingRepositoryType {
     /// Returns the primary account for the user if there is one, or an error.
     func getPrimaryAccount() -> Single<Account> {
         return Single<Account>.create { [unowned self] single in
-                Task {
-                    do {
-                        let accounts = try await apiClient.getAccounts()
-                        if let account = accounts.first(where: { $0.accountType == "PRIMARY" }) {
-                            single(.success(account))
-                        } else {
-                            single(.failure(StarlingError.primaryAccountNotFound))
-                        }
-                    } catch {
-                        single(.failure(error))
+            Task {
+                do {
+                    let accounts = try await apiClient.getAccounts()
+                    if let account = accounts.first(where: { $0.accountType == "PRIMARY" }) {
+                        single(.success(account))
+                    } else {
+                        single(.failure(StarlingError.primaryAccountNotFound))
                     }
+                } catch {
+                    single(.failure(error))
                 }
-                return Disposables.create()
             }
+            return Disposables.create()
+        }
+    }
+    
+    func getTransactions(accountID: String, categoryID: String, sinceDate: String) -> Single<[FeedItem]> {
+        return Single<[FeedItem]>.create { [unowned self] single in
+            Task {
+                do {
+                    let feedItems = try await apiClient.getTransactions(accountID: accountID,
+                                                                        categoryID: categoryID,
+                                                                        sinceDate: sinceDate)
+                    single(.success(feedItems))
+                } catch {
+                    single(.failure(error))
+                }
+            }
+            return Disposables.create()
+        }
     }
 }

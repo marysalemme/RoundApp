@@ -13,7 +13,6 @@
 		1A1519282A8F7ADE00A5915C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1A1519262A8F7ADE00A5915C /* LaunchScreen.storyboard */; };
 		1A798C2D2A8FC7D0003CC121 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A798C2C2A8FC7D0003CC121 /* Account.swift */; };
 		1A798C302A8FD38B003CC121 /* Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A798C2F2A8FD38B003CC121 /* Auth.swift */; };
-		1A798C322A8FD762003CC121 /* StarlingAPITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A798C312A8FD762003CC121 /* StarlingAPITests.swift */; };
 		1A91F9AF2A8FD8E7000EB10B /* StarlingAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A91F9AE2A8FD8E7000EB10B /* StarlingAPIClient.swift */; };
 		1A91F9B52A8FF38C000EB10B /* TransactionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A91F9B42A8FF38C000EB10B /* TransactionsViewModel.swift */; };
 		1A91F9B72A8FF399000EB10B /* TransactionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A91F9B62A8FF399000EB10B /* TransactionsViewController.swift */; };
@@ -22,6 +21,7 @@
 		1ACE03782A90DE52007B3A46 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ACE03772A90DE52007B3A46 /* Errors.swift */; };
 		1ACE037F2A90F349007B3A46 /* TransactionsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ACE037E2A90F349007B3A46 /* TransactionsViewModelTests.swift */; };
 		1ACE03812A90F3BA007B3A46 /* MockStarlingRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ACE03802A90F3BA007B3A46 /* MockStarlingRepository.swift */; };
+		1ACE03832A90F928007B3A46 /* FeedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ACE03822A90F928007B3A46 /* FeedItem.swift */; };
 		56E3A028274C786A8FCF47C0 /* Pods_RoundApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DE72C42EB23C7A05C9E1965 /* Pods_RoundApp.framework */; };
 		7463997AA0E87A5E2991C203 /* Pods_RoundAppTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3EFC0D07B85372E31E9304AF /* Pods_RoundAppTests.framework */; };
 /* End PBXBuildFile section */
@@ -46,7 +46,6 @@
 		1A15192E2A8F7ADE00A5915C /* RoundAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RoundAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A798C2C2A8FC7D0003CC121 /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
 		1A798C2F2A8FD38B003CC121 /* Auth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Auth.swift; sourceTree = "<group>"; };
-		1A798C312A8FD762003CC121 /* StarlingAPITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarlingAPITests.swift; sourceTree = "<group>"; };
 		1A91F9AE2A8FD8E7000EB10B /* StarlingAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StarlingAPIClient.swift; sourceTree = "<group>"; };
 		1A91F9B42A8FF38C000EB10B /* TransactionsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsViewModel.swift; sourceTree = "<group>"; };
 		1A91F9B62A8FF399000EB10B /* TransactionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsViewController.swift; sourceTree = "<group>"; };
@@ -55,6 +54,7 @@
 		1ACE03772A90DE52007B3A46 /* Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
 		1ACE037E2A90F349007B3A46 /* TransactionsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsViewModelTests.swift; sourceTree = "<group>"; };
 		1ACE03802A90F3BA007B3A46 /* MockStarlingRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockStarlingRepository.swift; sourceTree = "<group>"; };
+		1ACE03822A90F928007B3A46 /* FeedItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedItem.swift; sourceTree = "<group>"; };
 		2DE72C42EB23C7A05C9E1965 /* Pods_RoundApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RoundApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3EFC0D07B85372E31E9304AF /* Pods_RoundAppTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RoundAppTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A6786DF769E1FC5511B5056 /* Pods-RoundAppTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RoundAppTests.debug.xcconfig"; path = "Target Support Files/Pods-RoundAppTests/Pods-RoundAppTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -124,7 +124,6 @@
 			isa = PBXGroup;
 			children = (
 				1ACE037B2A90E4C2007B3A46 /* Mocks */,
-				1A798C312A8FD762003CC121 /* StarlingAPITests.swift */,
 				1ACE037E2A90F349007B3A46 /* TransactionsViewModelTests.swift */,
 			);
 			path = RoundAppTests;
@@ -144,6 +143,7 @@
 			children = (
 				1A798C2C2A8FC7D0003CC121 /* Account.swift */,
 				1ACE03772A90DE52007B3A46 /* Errors.swift */,
+				1ACE03822A90F928007B3A46 /* FeedItem.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -394,6 +394,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1ACE03832A90F928007B3A46 /* FeedItem.swift in Sources */,
 				1A798C2D2A8FC7D0003CC121 /* Account.swift in Sources */,
 				1A798C302A8FD38B003CC121 /* Auth.swift in Sources */,
 				1A91F9AF2A8FD8E7000EB10B /* StarlingAPIClient.swift in Sources */,
@@ -412,7 +413,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				1ACE037F2A90F349007B3A46 /* TransactionsViewModelTests.swift in Sources */,
-				1A798C322A8FD762003CC121 /* StarlingAPITests.swift in Sources */,
 				1ACE03812A90F3BA007B3A46 /* MockStarlingRepository.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
