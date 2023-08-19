@@ -41,7 +41,9 @@ class TransactionsViewController: UIViewController {
     private func setupUI() {
         view.backgroundColor = .systemGray6
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        tableView.register(TransactionCell.self, forCellReuseIdentifier: "TransactionCell")
+        tableView.separatorStyle = .none
+        tableView.estimatedRowHeight = 120
         view.addSubview(tableView)
     }
     
@@ -56,11 +58,18 @@ class TransactionsViewController: UIViewController {
             .drive(navigationItem.rx.title)
             .disposed(by: disposeBag)
         
-        viewModel.transactions.asObservable()
-            .bind(to: tableView.rx.items(cellIdentifier: "cell")) { row, model, cell in
-                cell.textLabel?.text = "\(model.amount.minorUnits.toDecimal()) \(model.transactionTime.formatToString())"
-                cell.textLabel?.numberOfLines = 0
-                cell.selectionStyle = .none
-            }.disposed(by: disposeBag)
+        viewModel.transactions.drive(tableView.rx.items(cellIdentifier: TransactionCell.reuseIdentifier, cellType: TransactionCell.self)) { [weak self] _, transaction, cell in
+            cell.amount = self?.composeTransactionString(amount: transaction.amount.minorUnits.toDecimal(), currency: transaction.amount.currency, direction: transaction.direction)
+            cell.date = transaction.transactionTime.formatToString()
+        }
+        .disposed(by: disposeBag)
+    }
+    
+    private func composeTransactionString(amount: Decimal, currency: String, direction: String) -> String {
+        if direction == "OUT" {
+            return "- \(amount) \(currency.uppercased())"
+        } else {
+            return "+ \(amount) \(currency.uppercased())"
+        }
     }
 }

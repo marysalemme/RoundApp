@@ -15,6 +15,7 @@
 		1A4753502A91265500BBD846 /* DateExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A47534F2A91265500BBD846 /* DateExtensionsTests.swift */; };
 		1A4753522A91299100BBD846 /* IntExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A4753512A91299100BBD846 /* IntExtensions.swift */; };
 		1A4753542A912A2C00BBD846 /* IntExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A4753532A912A2C00BBD846 /* IntExtensionsTests.swift */; };
+		1A4753562A912B1400BBD846 /* TransactionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A4753552A912B1400BBD846 /* TransactionCell.swift */; };
 		1A798C2D2A8FC7D0003CC121 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A798C2C2A8FC7D0003CC121 /* Account.swift */; };
 		1A798C302A8FD38B003CC121 /* Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A798C2F2A8FD38B003CC121 /* Auth.swift */; };
 		1A91F9AF2A8FD8E7000EB10B /* StarlingAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A91F9AE2A8FD8E7000EB10B /* StarlingAPIClient.swift */; };
@@ -52,6 +53,7 @@
 		1A47534F2A91265500BBD846 /* DateExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtensionsTests.swift; sourceTree = "<group>"; };
 		1A4753512A91299100BBD846 /* IntExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntExtensions.swift; sourceTree = "<group>"; };
 		1A4753532A912A2C00BBD846 /* IntExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntExtensionsTests.swift; sourceTree = "<group>"; };
+		1A4753552A912B1400BBD846 /* TransactionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionCell.swift; sourceTree = "<group>"; };
 		1A798C2C2A8FC7D0003CC121 /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
 		1A798C2F2A8FD38B003CC121 /* Auth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Auth.swift; sourceTree = "<group>"; };
 		1A91F9AE2A8FD8E7000EB10B /* StarlingAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StarlingAPIClient.swift; sourceTree = "<group>"; };
@@ -205,6 +207,7 @@
 			children = (
 				1A91F9B42A8FF38C000EB10B /* TransactionsViewModel.swift */,
 				1A91F9B62A8FF399000EB10B /* TransactionsViewController.swift */,
+				1A4753552A912B1400BBD846 /* TransactionCell.swift */,
 			);
 			path = Transactions;
 			sourceTree = "<group>";
@@ -430,6 +433,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1A4753562A912B1400BBD846 /* TransactionCell.swift in Sources */,
 				1ACE03832A90F928007B3A46 /* FeedItem.swift in Sources */,
 				1A798C2D2A8FC7D0003CC121 /* Account.swift in Sources */,
 				1A798C302A8FD38B003CC121 /* Auth.swift in Sources */,
