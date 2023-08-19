@@ -27,4 +27,10 @@ final class TransactionsViewModelTests: XCTestCase {
         let driver = sut.screenTitle.asObservable().subscribe(on: scheduler)
         XCTAssertEqual(try driver.toBlocking(timeout: 1).first(), "Personal Account")
     }
+    
+    func testTransactions() {
+        let driver = sut.transactions.asObservable().subscribe(on: scheduler)
+        XCTAssertEqual(try driver.toBlocking(timeout: 1).first()?.count, 2)
+        XCTAssertEqual(try driver.toBlocking(timeout: 1).first()?.first?.amount.minorUnits, 2300)
+    }
 }
