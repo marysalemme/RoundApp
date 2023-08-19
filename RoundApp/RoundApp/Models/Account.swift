@@ -14,6 +14,9 @@ struct Response: Codable {
 
 // MARK: - Account
 struct Account: Codable {
-    let accountUid, accountType, defaultCategory, currency: String
-    let createdAt, name: String
+    let accountUid: String
+    let accountType: String
+    let defaultCategory: String
+    let currency: String
+    let name: String
 }
