@@ -28,9 +28,20 @@ class TransactionsViewModel {
         return _totalRoundUpAmount.asDriver()
     }
     
+    private let _addToSavingsButtonTitle = BehaviorRelay<String>(value: "Add to Savings Goal")
+    var addToSavingsButtonTitle: Driver<String> {
+        return _addToSavingsButtonTitle.asDriver()
+    }
+    
     private let _transactions = BehaviorRelay<[FeedItem]>(value: [])
     var transactions: Driver<[FeedItem]> {
         return _transactions.asDriver()
+    }
+    
+    // MARK: - Inputs
+    
+    func transferToSavingGoal() {
+        print("Transfer to saving goal")
     }
     
     // MARK: - Dependencies

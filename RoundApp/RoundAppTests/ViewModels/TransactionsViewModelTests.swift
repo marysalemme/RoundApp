@@ -12,7 +12,7 @@ import RxBlocking
 @testable import RoundApp
 
 final class TransactionsViewModelTests: XCTestCase {
-
+    
     var sut: TransactionsViewModel!
     var mockRepository: StarlingRepositoryType!
     var scheduler: ConcurrentDispatchQueueScheduler!
@@ -22,7 +22,7 @@ final class TransactionsViewModelTests: XCTestCase {
         mockRepository = MockStarlingRepository()
         sut = TransactionsViewModel(repository: mockRepository)
     }
-
+    
     func testScreenTitle() {
         let driver = sut.screenTitle.asObservable().subscribe(on: scheduler)
         XCTAssertEqual(try driver.toBlocking(timeout: 1).first(), "Personal Account")

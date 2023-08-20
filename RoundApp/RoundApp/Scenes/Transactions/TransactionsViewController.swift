@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 import RxSwift
 import RxCocoa
+import RxGesture
 import SnapKit
 
 class TransactionsViewController: UIViewController {
@@ -21,6 +22,8 @@ class TransactionsViewController: UIViewController {
     
     let roundUpAmount: UILabel
     
+    let addToSavingsButton: UIButton
+    
     let tableView: UITableView
     
     var viewModel: TransactionsViewModel
@@ -32,6 +35,7 @@ class TransactionsViewController: UIViewController {
         self.roundUpContainer = UIView(frame: .zero)
         self.roundUpSectionTitle = UILabel(frame: .zero)
         self.roundUpAmount = UILabel(frame: .zero)
+        self.addToSavingsButton = UIButton(frame: .zero)
         self.tableView = UITableView(frame: .zero)
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -53,6 +57,7 @@ class TransactionsViewController: UIViewController {
         view.backgroundColor = .systemGray6
         roundUpContainer.backgroundColor = .systemTeal
         roundUpContainer.layer.cornerRadius = 20
+        roundUpContainer.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(roundUpContainer)
         
         roundUpSectionTitle.font = .preferredFont(forTextStyle: .title3)
@@ -62,6 +67,12 @@ class TransactionsViewController: UIViewController {
         roundUpAmount.font = .preferredFont(forTextStyle: .title1)
         roundUpAmount.textAlignment = .center
         roundUpContainer.addSubview(roundUpAmount)
+        
+        addToSavingsButton.titleLabel?.font = .preferredFont(forTextStyle: .body)
+        addToSavingsButton.setTitleColor(.systemGray, for: .normal)
+        addToSavingsButton.backgroundColor = .systemBackground
+        addToSavingsButton.layer.cornerRadius = 20
+        roundUpContainer.addSubview(addToSavingsButton)
         
         tableView.backgroundColor = .systemGray6
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -77,7 +88,6 @@ class TransactionsViewController: UIViewController {
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(10)
             make.leading.equalToSuperview().offset(20)
             make.trailing.equalToSuperview().inset(20)
-            make.height.equalTo(150)
         }
         roundUpSectionTitle.snp.makeConstraints { make in
             make.leading.top.equalToSuperview().offset(20)
@@ -87,7 +97,13 @@ class TransactionsViewController: UIViewController {
             make.top.equalTo(roundUpSectionTitle.snp.bottom).offset(10)
             make.leading.equalToSuperview().offset(20)
             make.trailing.equalToSuperview().inset(10)
-//            make.bottom.equalToSuperview().inset(20)
+        }
+        addToSavingsButton.snp.makeConstraints { make in
+            make.top.equalTo(roundUpAmount.snp.bottom).offset(20)
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().inset(20)
+            make.bottom.equalToSuperview().inset(20)
+            make.height.greaterThanOrEqualTo(50)
         }
         tableView.snp.makeConstraints { make in
             make.top.equalTo(roundUpContainer.snp.bottom).offset(20)
@@ -104,8 +120,20 @@ class TransactionsViewController: UIViewController {
         viewModel.roundUpSectionTitle
             .drive(roundUpSectionTitle.rx.text)
             .disposed(by: disposeBag)
+        
         viewModel.totalRoundUpAmount
             .drive(roundUpAmount.rx.text)
+            .disposed(by: disposeBag)
+        
+        viewModel.addToSavingsButtonTitle
+            .drive(addToSavingsButton.rx.title())
+            .disposed(by: disposeBag)
+        
+        addToSavingsButton.rx.tapGesture()
+            .when(.recognized)
+            .subscribe(onNext: { [weak self] _ in
+                self?.viewModel.transferToSavingGoal()
+            })
             .disposed(by: disposeBag)
         
         viewModel.transactions.drive(tableView.rx.items(cellIdentifier: TransactionCell.reuseIdentifier, cellType: TransactionCell.self)) { [weak self] _, transaction, cell in
