@@ -13,22 +13,30 @@ import RxSwift
 class TransactionCell: UITableViewCell {
     
     public static let reuseIdentifier = "TransactionCell"
-
+    
     private let cellView: UIView
     
     private let dateLabel: UILabel
     
     private let amountLabel: UILabel
     
+    private let roundUpAmountLabel: UILabel
+    
     var amount: String? {
         didSet {
             self.amountLabel.text = amount
         }
     }
-
+    
     var date: String? {
         didSet {
             self.dateLabel.text = date
+        }
+    }
+    
+    var roundUpAmount: String? {
+        didSet {
+            self.roundUpAmountLabel.text = roundUpAmount
         }
     }
     
@@ -36,6 +44,7 @@ class TransactionCell: UITableViewCell {
         cellView = UIView(frame: .zero)
         dateLabel = UILabel(frame: .zero)
         amountLabel = UILabel(frame: .zero)
+        roundUpAmountLabel = UILabel(frame: .zero)
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
         setupConstraints()
@@ -47,7 +56,8 @@ class TransactionCell: UITableViewCell {
 
     private func setupUI() {
         selectionStyle = .none
-        cellView.backgroundColor = .secondarySystemBackground
+        backgroundColor = .systemGray6
+        cellView.backgroundColor = .systemGray4
         cellView.layer.cornerRadius = 10
         cellView.clipsToBounds = true
         cellView.translatesAutoresizingMaskIntoConstraints = false
@@ -62,6 +72,8 @@ class TransactionCell: UITableViewCell {
         amountLabel.textColor = .systemTeal
         amountLabel.translatesAutoresizingMaskIntoConstraints = false
         cellView.addSubview(amountLabel)
+        
+        roundUpAmountLabel.font = .preferredFont(forTextStyle: .caption1)
     }
 
     private func setupConstraints() {
