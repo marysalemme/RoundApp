@@ -36,8 +36,20 @@ class MainCoordinator: Coordinator {
     // MARK: - Coordinator
     
     func start() {
-        let transactionsCoordinator = TransactionsCoordinator(navigationController: navigationController,
-                                                              repository: repository)
-        transactionsCoordinator.start()
+        showTransactions()
+    }
+    
+    func showTransactions() {
+        let transactionsViewModel = TransactionsViewModel(repository: repository)
+        transactionsViewModel.coordinator = self
+        let transactionsViewController = TransactionsViewController(viewModel: transactionsViewModel)
+        navigationController.pushViewController(transactionsViewController, animated: false)
+    }
+    
+    func goToSavings() {
+        let savingsViewModel = SavingsViewModel(repository: repository)
+        savingsViewModel.coordinator = self
+        let savingsViewController = SavingsViewController(viewModel: savingsViewModel)
+        navigationController.pushViewController(savingsViewController, animated: false)
     }
 }

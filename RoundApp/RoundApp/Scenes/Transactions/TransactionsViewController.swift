@@ -50,6 +50,7 @@ class TransactionsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        viewModel.loadAccountTransactions()
     }
     
     private func setupUI() {
@@ -132,7 +133,7 @@ class TransactionsViewController: UIViewController {
         addToSavingsButton.rx.tapGesture()
             .when(.recognized)
             .subscribe(onNext: { [weak self] _ in
-                self?.viewModel.transferToSavingGoal()
+                self?.viewModel.addToSavings()
             })
             .disposed(by: disposeBag)
         

@@ -40,12 +40,17 @@ class TransactionsViewModel {
     
     // MARK: - Inputs
     
-    func transferToSavingGoal() {
-        print("Transfer to saving goal")
+    func addToSavings() {
+        print(coordinator)
+        coordinator?.goToSavings()
     }
     
     // MARK: - Dependencies
     
+    /// The coordinator for the transactions scene.
+    weak var coordinator: MainCoordinator?
+    
+    /// The repository used to fetch the transactions.
     private let repository: StarlingRepositoryType
     
     /// The dispose bag for the view model. Used to dispose of any subscriptions.
@@ -54,10 +59,10 @@ class TransactionsViewModel {
     // MARK: - Initializer
     init(repository: StarlingRepositoryType) {
         self.repository = repository
-        loadAccountTransactions()
+//        loadAccountTransactions()
     }
     
-    private func loadAccountTransactions() {
+    func loadAccountTransactions() {
         // TODO: Add loading
         repository.getPrimaryAccount()
             .flatMap { account -> Single<[FeedItem]> in
@@ -68,8 +73,13 @@ class TransactionsViewModel {
             .subscribe { event in
                 switch event {
                 case .success(let transactions):
-                    let roundUpAmount = self.calculateRoundUpAmount(transactions: transactions)
-                    self._totalRoundUpAmount.accept("\(roundUpAmount) GBP")
+                    if transactions.isEmpty {
+                        self._totalRoundUpAmount.accept("0 GBP")
+                        // TODO: Show empty state
+                    } else {
+                        let roundUpAmount = self.calculateRoundUpAmount(transactions: transactions)
+                        self._totalRoundUpAmount.accept("\(roundUpAmount) GBP")
+                    }
                     self._transactions.accept(transactions)
                 case .failure(let error):
                     // TODO: Handle error
