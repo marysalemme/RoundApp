@@ -35,10 +35,9 @@ class MainCoordinator: Coordinator {
     
     // MARK: - Coordinator
     
-    /// Starts the coordinator's flow from the transactions screen.
     func start() {
-        let transactionsViewModel = TransactionsViewModel(repository: repository)
-        let transactionsViewController = TransactionsViewController(viewModel: transactionsViewModel)
-        navigationController.pushViewController(transactionsViewController, animated: false)
+        let transactionsCoordinator = TransactionsCoordinator(navigationController: navigationController,
+                                                              repository: repository)
+        transactionsCoordinator.start()
     }
 }

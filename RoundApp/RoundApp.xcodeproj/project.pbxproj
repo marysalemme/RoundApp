@@ -18,6 +18,7 @@
 		1A4753562A912B1400BBD846 /* TransactionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A4753552A912B1400BBD846 /* TransactionCell.swift */; };
 		1A4753582A92200300BBD846 /* DecimalExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A4753572A92200300BBD846 /* DecimalExtensions.swift */; };
 		1A47535C2A92208D00BBD846 /* DecimalExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A47535B2A92208D00BBD846 /* DecimalExtensionsTests.swift */; };
+		1A47535E2A92408400BBD846 /* TransactionsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A47535D2A92408400BBD846 /* TransactionsCoordinator.swift */; };
 		1A798C2D2A8FC7D0003CC121 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A798C2C2A8FC7D0003CC121 /* Account.swift */; };
 		1A798C302A8FD38B003CC121 /* Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A798C2F2A8FD38B003CC121 /* Auth.swift */; };
 		1A91F9AF2A8FD8E7000EB10B /* StarlingAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A91F9AE2A8FD8E7000EB10B /* StarlingAPIClient.swift */; };
@@ -58,6 +59,7 @@
 		1A4753552A912B1400BBD846 /* TransactionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionCell.swift; sourceTree = "<group>"; };
 		1A4753572A92200300BBD846 /* DecimalExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecimalExtensions.swift; sourceTree = "<group>"; };
 		1A47535B2A92208D00BBD846 /* DecimalExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecimalExtensionsTests.swift; sourceTree = "<group>"; };
+		1A47535D2A92408400BBD846 /* TransactionsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsCoordinator.swift; sourceTree = "<group>"; };
 		1A798C2C2A8FC7D0003CC121 /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
 		1A798C2F2A8FD38B003CC121 /* Auth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Auth.swift; sourceTree = "<group>"; };
 		1A91F9AE2A8FD8E7000EB10B /* StarlingAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StarlingAPIClient.swift; sourceTree = "<group>"; };
@@ -222,6 +224,7 @@
 			isa = PBXGroup;
 			children = (
 				1A91F9B92A8FF3BB000EB10B /* MainCoordinator.swift */,
+				1A47535D2A92408400BBD846 /* TransactionsCoordinator.swift */,
 			);
 			path = Coordinators;
 			sourceTree = "<group>";
@@ -444,6 +447,7 @@
 				1A798C2D2A8FC7D0003CC121 /* Account.swift in Sources */,
 				1A798C302A8FD38B003CC121 /* Auth.swift in Sources */,
 				1A91F9AF2A8FD8E7000EB10B /* StarlingAPIClient.swift in Sources */,
+				1A47535E2A92408400BBD846 /* TransactionsCoordinator.swift in Sources */,
 				1A4753582A92200300BBD846 /* DecimalExtensions.swift in Sources */,
 				1A15191C2A8F7ADD00A5915C /* AppDelegate.swift in Sources */,
 				1A47534B2A91259000BBD846 /* DateExtensions.swift in Sources */,
