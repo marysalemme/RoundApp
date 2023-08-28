@@ -9,8 +9,12 @@ import Foundation
 import RxSwift
 
 protocol StarlingRepositoryType {
+    
     func getPrimaryAccount() -> Single<Account>
+    
     func getTransactions(accountID: String, categoryID: String, sinceDate: String) -> Single<[FeedItem]>
+    
+    func getSavingGoals(accountID: String) -> Single<[SavingsGoal]>
 }
 
 /// A repository that is used to fetch data from the Starling API.
@@ -43,6 +47,7 @@ class StarlingRepository: StarlingRepositoryType {
         }
     }
     
+    /// Returns the transactions for the given account, category and date.
     func getTransactions(accountID: String, categoryID: String, sinceDate: String) -> Single<[FeedItem]> {
         return Single<[FeedItem]>.create { [unowned self] single in
             Task {
@@ -51,6 +56,21 @@ class StarlingRepository: StarlingRepositoryType {
                                                                         categoryID: categoryID,
                                                                         sinceDate: sinceDate)
                     single(.success(feedItems))
+                } catch {
+                    single(.failure(error))
+                }
+            }
+            return Disposables.create()
+        }
+    }
+    
+    /// Returns the saving goals for the given account.
+    func getSavingGoals(accountID: String) -> Single<[SavingsGoal]> {
+        return Single<[SavingsGoal]>.create { [unowned self] single in
+            Task {
+                do {
+                    let savingsGoals = try await apiClient.getSavingGoals(accountID: accountID)
+                    single(.success(savingsGoals))
                 } catch {
                     single(.failure(error))
                 }

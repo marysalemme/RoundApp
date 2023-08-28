@@ -12,6 +12,8 @@ protocol StarlingAPIClientType {
     func getAccounts() async throws -> [Account]
     
     func getTransactions(accountID: String, categoryID: String, sinceDate: String) async throws -> [FeedItem]
+    
+    func getSavingGoals(accountID: String) async throws -> [SavingsGoal]
 }
 
 class StarlingAPIClient: StarlingAPIClientType {
@@ -27,6 +29,7 @@ class StarlingAPIClient: StarlingAPIClientType {
     enum Endpoint {
         case accounts
         case transactions(accountID: String, categoryID: String)
+        case savingGoals(accountID: String)
         
         var value: String {
             switch self {
@@ -34,6 +37,8 @@ class StarlingAPIClient: StarlingAPIClientType {
                 return "accounts"
             case let .transactions(accountID, categoryID):
                 return "feed/account/\(accountID)/category/\(categoryID)"
+            case let .savingGoals(accountID):
+                return "account/\(accountID)/savings-goals"
             }
         }
     }
@@ -61,6 +66,16 @@ class StarlingAPIClient: StarlingAPIClientType {
         do {
             let decoder = JSONDecoder()
             return try decoder.decode(TransactionResponse.self, from: data).feedItems
+        } catch {
+            throw NetworkError.invalidData
+        }
+    }
+    
+    func getSavingGoals(accountID: String) async throws -> [SavingsGoal] {
+        let data = try await loadData(for: .savingGoals(accountID: accountID))
+        do {
+            let decoder = JSONDecoder()
+            return try decoder.decode(SavingsGoalsResponse.self, from: data).savingsGoalList
         } catch {
             throw NetworkError.invalidData
         }

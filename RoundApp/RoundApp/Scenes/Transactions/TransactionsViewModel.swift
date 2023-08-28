@@ -41,7 +41,6 @@ class TransactionsViewModel {
     // MARK: - Inputs
     
     func addToSavings() {
-        print(coordinator)
         coordinator?.goToSavings()
     }
     

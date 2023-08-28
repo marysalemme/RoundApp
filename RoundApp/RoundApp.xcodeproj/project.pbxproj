@@ -20,6 +20,8 @@
 		1A47535C2A92208D00BBD846 /* DecimalExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A47535B2A92208D00BBD846 /* DecimalExtensionsTests.swift */; };
 		1A4A61E82A9BA0EC00941B58 /* SavingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A4A61E72A9BA0EC00941B58 /* SavingsViewModel.swift */; };
 		1A4A61EA2A9BA0F400941B58 /* SavingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A4A61E92A9BA0F400941B58 /* SavingsViewController.swift */; };
+		1A4A61EC2A9CBA2C00941B58 /* SavingsGoal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A4A61EB2A9CBA2C00941B58 /* SavingsGoal.swift */; };
+		1A4A61EE2A9CBCB600941B58 /* SavingsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A4A61ED2A9CBCB600941B58 /* SavingsViewModelTests.swift */; };
 		1A798C2D2A8FC7D0003CC121 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A798C2C2A8FC7D0003CC121 /* Account.swift */; };
 		1A798C302A8FD38B003CC121 /* Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A798C2F2A8FD38B003CC121 /* Auth.swift */; };
 		1A91F9AF2A8FD8E7000EB10B /* StarlingAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A91F9AE2A8FD8E7000EB10B /* StarlingAPIClient.swift */; };
@@ -62,6 +64,8 @@
 		1A47535B2A92208D00BBD846 /* DecimalExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecimalExtensionsTests.swift; sourceTree = "<group>"; };
 		1A4A61E72A9BA0EC00941B58 /* SavingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavingsViewModel.swift; sourceTree = "<group>"; };
 		1A4A61E92A9BA0F400941B58 /* SavingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavingsViewController.swift; sourceTree = "<group>"; };
+		1A4A61EB2A9CBA2C00941B58 /* SavingsGoal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavingsGoal.swift; sourceTree = "<group>"; };
+		1A4A61ED2A9CBCB600941B58 /* SavingsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavingsViewModelTests.swift; sourceTree = "<group>"; };
 		1A798C2C2A8FC7D0003CC121 /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
 		1A798C2F2A8FD38B003CC121 /* Auth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Auth.swift; sourceTree = "<group>"; };
 		1A91F9AE2A8FD8E7000EB10B /* StarlingAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StarlingAPIClient.swift; sourceTree = "<group>"; };
@@ -163,6 +167,7 @@
 			isa = PBXGroup;
 			children = (
 				1ACE037E2A90F349007B3A46 /* TransactionsViewModelTests.swift */,
+				1A4A61ED2A9CBCB600941B58 /* SavingsViewModelTests.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -201,6 +206,7 @@
 				1A798C2C2A8FC7D0003CC121 /* Account.swift */,
 				1ACE03772A90DE52007B3A46 /* Errors.swift */,
 				1ACE03822A90F928007B3A46 /* FeedItem.swift */,
+				1A4A61EB2A9CBA2C00941B58 /* SavingsGoal.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -463,6 +469,7 @@
 				1A47534B2A91259000BBD846 /* DateExtensions.swift in Sources */,
 				1A91F9B52A8FF38C000EB10B /* TransactionsViewModel.swift in Sources */,
 				1A4A61EA2A9BA0F400941B58 /* SavingsViewController.swift in Sources */,
+				1A4A61EC2A9CBA2C00941B58 /* SavingsGoal.swift in Sources */,
 				1A4753522A91299100BBD846 /* IntExtensions.swift in Sources */,
 				1A91F9B72A8FF399000EB10B /* TransactionsViewController.swift in Sources */,
 				1A4A61E82A9BA0EC00941B58 /* SavingsViewModel.swift in Sources */,
@@ -481,6 +488,7 @@
 				1A4753542A912A2C00BBD846 /* IntExtensionsTests.swift in Sources */,
 				1ACE03812A90F3BA007B3A46 /* MockStarlingRepository.swift in Sources */,
 				1A4753502A91265500BBD846 /* DateExtensionsTests.swift in Sources */,
+				1A4A61EE2A9CBCB600941B58 /* SavingsViewModelTests.swift in Sources */,
 				1A47535C2A92208D00BBD846 /* DecimalExtensionsTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

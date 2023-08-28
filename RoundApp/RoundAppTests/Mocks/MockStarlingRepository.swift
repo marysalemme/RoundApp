@@ -30,6 +30,10 @@ class MockStarlingRepository: StarlingRepositoryType {
             FeedItem(feedItemUid: "123", categoryUid: "123123", amount: Amount(currency: "GBP", minorUnits: 450500), direction: "IN", transactionTime:  dateFormatter.date(from: "2023-08-19T12:37:14.893Z")!)
         ])
     }
+    
+    func getSavingGoals(accountID: String) -> Single<[SavingsGoal]> {
+        return .just([])
+    }
 }
 
 class MockStarlingRepositoryNoTransactions: StarlingRepositoryType {
@@ -43,5 +47,9 @@ class MockStarlingRepositoryNoTransactions: StarlingRepositoryType {
     
     func getTransactions(accountID: String, categoryID: String, sinceDate: String) -> Single<[FeedItem]> {
         return Single.just([])
+    }
+    
+    func getSavingGoals(accountID: String) -> Single<[SavingsGoal]> {
+        return .just([])
     }
 }
