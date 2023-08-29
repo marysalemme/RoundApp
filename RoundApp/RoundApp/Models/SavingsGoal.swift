@@ -12,15 +12,22 @@ struct SavingsGoalsResponse: Codable {
 }
 
 struct SavingsGoal: Codable {
-    let savingsGoalUid: String
+    let savingsGoalUid: String?
     let name: String
+    let currency: String?
     let target: Target
-    let totalSaved: Target
-    let savedPercentage: Int
-    let state: String
+    let totalSaved: Target?
+    let savedPercentage: Int?
+    let state: String?
 }
 
 struct Target: Codable {
     let currency: String
     let minorUnits: Int
 }
+
+struct SavingsGoalCreated: Codable {
+    let savingsGoalUid: String
+    let success: Bool
+}
+

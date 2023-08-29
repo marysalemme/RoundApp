@@ -15,6 +15,8 @@ protocol StarlingRepositoryType {
     func getTransactions(accountID: String, categoryID: String, sinceDate: String) -> Single<[FeedItem]>
     
     func getSavingGoals(accountID: String) -> Single<[SavingsGoal]>
+    
+    func createSavingGoal(accountID: String, goal: SavingsGoal) -> Single<SavingsGoalCreated>
 }
 
 /// A repository that is used to fetch data from the Starling API.
@@ -77,5 +79,20 @@ class StarlingRepository: StarlingRepositoryType {
             }
             return Disposables.create()
         }
+    }
+    
+    func createSavingGoal(accountID: String, goal: SavingsGoal) -> Single<SavingsGoalCreated> {
+        return Single<SavingsGoalCreated>.create { [unowned self] single in
+            Task {
+                do {
+                    let response = try await apiClient.createSavingGoal(accountID: accountID, goal: goal)
+                    single(.success(response))
+                } catch {
+                    single(.failure(error))
+                }
+            }
+            return Disposables.create()
+        }
+    
     }
 }

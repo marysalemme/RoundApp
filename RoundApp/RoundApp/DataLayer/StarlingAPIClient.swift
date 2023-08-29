@@ -14,6 +14,8 @@ protocol StarlingAPIClientType {
     func getTransactions(accountID: String, categoryID: String, sinceDate: String) async throws -> [FeedItem]
     
     func getSavingGoals(accountID: String) async throws -> [SavingsGoal]
+    
+    func createSavingGoal(accountID: String, goal: SavingsGoal) async throws -> SavingsGoalCreated
 }
 
 class StarlingAPIClient: StarlingAPIClientType {
@@ -81,15 +83,35 @@ class StarlingAPIClient: StarlingAPIClientType {
         }
     }
     
+    func createSavingGoal(accountID: String, goal: SavingsGoal) async throws -> SavingsGoalCreated {
+        let body = try encodeBody(goal)
+        let data = try await loadData(for: .savingGoals(accountID: accountID),
+                                      body: body,
+                                      httpMethod: .put)
+        do {
+            let decoder = JSONDecoder()
+            return try decoder.decode(SavingsGoalCreated.self, from: data)
+        } catch {
+            throw NetworkError.invalidData
+        }
+    }
+    
     // MARK: - Private methods
     
-    private func loadData(for endpoint: Endpoint, parameters: [String:String]? = nil) async throws -> Data {
+    private func loadData(for endpoint: Endpoint,
+                          parameters: [String:String]? = nil,
+                          body: Data? = nil,
+                          httpMethod: HTTPMethod = .get) async throws -> Data {
         let url = try composeURL(for: endpoint)
         var request = URLRequest(url: url)
         appendHeaders(to: &request)
         if parameters != nil {
             try setQueryParameters(of: &request, parameters: parameters!)
         }
+        if body != nil {
+            request.httpBody = body
+        }
+        request.httpMethod = httpMethod.rawValue
         let (data, response) = try await urlSession.data(for: request)
         
         try checkResponse(response)
@@ -111,10 +133,11 @@ class StarlingAPIClient: StarlingAPIClientType {
             urlRequest.url = urlComponents.url
         }
     }
-    
+        
     private func appendHeaders(to request: inout URLRequest) {
         request.addValue("Bearer \(Auth.accessToken)", forHTTPHeaderField: "Authorization")
         request.addValue("application/json", forHTTPHeaderField: "Accept")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.addValue("RoundApp", forHTTPHeaderField: "User-Agent")
     }
     
@@ -128,6 +151,15 @@ class StarlingAPIClient: StarlingAPIClientType {
     private func checkResponse(_ response: URLResponse) throws {
         guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
             throw NetworkError.invalidResponse
+        }
+    }
+    
+    private func encodeBody<T: Encodable>(_ body: T) throws -> Data {
+        do {
+            let encoder = JSONEncoder()
+            return try encoder.encode(body)
+        } catch {
+            throw NetworkError.invalidBody
         }
     }
 }

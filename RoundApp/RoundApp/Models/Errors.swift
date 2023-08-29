@@ -12,6 +12,7 @@ enum NetworkError: Error {
     case missingURL
     case invalidResponse
     case invalidData
+    case invalidBody
 }
 
 enum StarlingError: Error {
