@@ -32,7 +32,13 @@ class MockStarlingRepository: StarlingRepositoryType {
     }
     
     func getSavingGoals(accountID: String) -> Single<[SavingsGoal]> {
-        return .just([])
+        return .just([SavingsGoal(savingsGoalUid: "123",
+                                  name: "Round Up",
+                                  currency: nil,
+                                  target: Target(currency: "GBP", minorUnits: 20000),
+                                  totalSaved: nil,
+                                  savedPercentage: nil,
+                                  state: "ACTIVE")])
     }
     
     func createSavingGoal(accountID: String, goal: SavingsGoal) -> Single<SavingsGoalCreated> {

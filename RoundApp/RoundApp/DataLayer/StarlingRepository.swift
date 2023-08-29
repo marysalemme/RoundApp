@@ -94,6 +94,5 @@ class StarlingRepository: StarlingRepositoryType {
             }
             return Disposables.create()
         }
-    
     }
 }

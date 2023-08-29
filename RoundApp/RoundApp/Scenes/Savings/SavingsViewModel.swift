@@ -41,7 +41,7 @@ class SavingsViewModel {
     // MARK: - Inputs
     
     func createNewSavingGoal() {
-        // TODO: Remove hard coded creation and navigate to new screen to create saving goal
+        // TODO: NiceToHave - Remove hard coded creation and navigate to new screen to create saving goal
         let goal = SavingsGoal(savingsGoalUid: nil,
                                name: "Round Up",
                                currency: "GBP",
@@ -50,10 +50,14 @@ class SavingsViewModel {
                                savedPercentage: nil,
                                state: nil)
         repository.createSavingGoal(accountID: accountID, goal: goal)
+            .flatMap { savingGoalCreated -> Single<[SavingsGoal]> in
+                return self.repository.getSavingGoals(accountID: self.accountID)
+            }
             .subscribe { event in
                 switch event {
-                case .success(let savingGoal):
-                    print(savingGoal)
+                case .success(let savingGoals):
+                    self._savingsGoals.accept(savingGoals)
+                    self._showEmptyView.accept(false)
                 case .failure(let error):
                     print(error)
                 }
