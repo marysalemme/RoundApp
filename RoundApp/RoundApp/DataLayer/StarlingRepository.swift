@@ -81,6 +81,7 @@ class StarlingRepository: StarlingRepositoryType {
         }
     }
     
+    /// Creates a saving goal for the given account with the given goal details.
     func createSavingGoal(accountID: String, goal: SavingsGoal) -> Single<SavingsGoalCreated> {
         return Single<SavingsGoalCreated>.create { [unowned self] single in
             Task {

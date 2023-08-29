@@ -41,7 +41,11 @@ class TransactionsViewModel {
     // MARK: - Inputs
     
     func addToSavings() {
-        coordinator?.goToSavings()
+        guard let coordinator = coordinator, let accountID = accountID else {
+            assertionFailure("Coordinator and account ID should not be nil when add to savings button is enabled")
+            return
+        }
+        coordinator.goToSavings(for: accountID)
     }
     
     // MARK: - Dependencies
@@ -52,13 +56,16 @@ class TransactionsViewModel {
     /// The repository used to fetch the transactions.
     private let repository: StarlingRepositoryType
     
+    /// The account ID used to fetch the transactions.
+    /// Required to navigate to the savings scene.
+    private var accountID: String?
+
     /// The dispose bag for the view model. Used to dispose of any subscriptions.
     private let disposeBag = DisposeBag()
     
     // MARK: - Initializer
     init(repository: StarlingRepositoryType) {
         self.repository = repository
-//        loadAccountTransactions()
     }
     
     func loadAccountTransactions() {
@@ -67,6 +74,7 @@ class TransactionsViewModel {
             .flatMap { account -> Single<[FeedItem]> in
                 self._screenTitle.accept("\(account.name) Account")
                 // TODO: Remove hardcoded date
+                self.accountID = account.accountUid
                 return self.repository.getTransactions(accountID: account.accountUid, categoryID: account.defaultCategory, sinceDate: "2023-08-18T11:37:14.893Z")
             }
             .subscribe { event in

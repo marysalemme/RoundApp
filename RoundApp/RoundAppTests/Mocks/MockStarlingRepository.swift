@@ -34,9 +34,13 @@ class MockStarlingRepository: StarlingRepositoryType {
     func getSavingGoals(accountID: String) -> Single<[SavingsGoal]> {
         return .just([])
     }
+    
+    func createSavingGoal(accountID: String, goal: SavingsGoal) -> Single<SavingsGoalCreated> {
+        return .just(SavingsGoalCreated(savingsGoalUid: "123", success: true))
+    }
 }
 
-class MockStarlingRepositoryNoTransactions: StarlingRepositoryType {
+class MockStarlingRepositoryEmptyData: StarlingRepositoryType {
     func getPrimaryAccount() -> Single<Account> {
         return Single.just(Account(accountUid: "123",
                                    accountType: "PRIMARY",
@@ -51,5 +55,9 @@ class MockStarlingRepositoryNoTransactions: StarlingRepositoryType {
     
     func getSavingGoals(accountID: String) -> Single<[SavingsGoal]> {
         return .just([])
+    }
+    
+    func createSavingGoal(accountID: String, goal: SavingsGoal) -> Single<SavingsGoalCreated> {
+        return .just(SavingsGoalCreated(savingsGoalUid: "123", success: true))
     }
 }

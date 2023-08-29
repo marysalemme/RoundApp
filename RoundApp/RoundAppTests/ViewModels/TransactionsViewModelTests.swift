@@ -49,7 +49,7 @@ final class TransactionsViewModelTests: XCTestCase {
     }
     
     func testTotalRoundUpAmountWhenNoTransactions() {
-        mockRepository = MockStarlingRepositoryNoTransactions()
+        mockRepository = MockStarlingRepositoryEmptyData()
         sut = TransactionsViewModel(repository: mockRepository)
         sut.loadAccountTransactions()
         let driver = sut.totalRoundUpAmount.asObservable().subscribe(on: scheduler)
