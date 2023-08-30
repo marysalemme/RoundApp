@@ -16,11 +16,19 @@ class SavingsViewController: UIViewController {
     
     // MARK: - Subviews
     
-    let noSavingGoalsView: UIView
+    let noSavingGoalsView: ContainerView
     
     let noSavingGoalsText: UILabel
     
-    let createnewGoalButton: UIButton
+    let createNewGoalButton: UIButton
+    
+    let savingsGoalView: ContainerView
+    
+    let savingsGoalTitle: UILabel
+    
+    let savingsGoalTotalSaved: UILabel
+
+    let savingsGoalTarget: UIProgressView
     
     // MARK: - Properties
     
@@ -35,9 +43,13 @@ class SavingsViewController: UIViewController {
     ///
     /// - Parameter viewModel: The `SavingsViewModel` that the view controller will use to fetch data from the Starling API.
     init(viewModel: SavingsViewModel) {
-        self.noSavingGoalsView = UIView(frame: .zero)
+        self.noSavingGoalsView = ContainerView(frame: .zero)
         self.noSavingGoalsText = UILabel(frame: .zero)
-        self.createnewGoalButton = UIButton(frame: .zero)
+        self.createNewGoalButton = UIButton(frame: .zero)
+        self.savingsGoalView = ContainerView(frame: .zero)
+        self.savingsGoalTitle = UILabel(frame: .zero)
+        self.savingsGoalTotalSaved = UILabel(frame: .zero)
+        self.savingsGoalTarget = UIProgressView(progressViewStyle: .default)
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
         setupUI()
@@ -59,20 +71,29 @@ class SavingsViewController: UIViewController {
     private func setupUI() {
         navigationController?.navigationBar.isTranslucent = false
         view.backgroundColor = .systemGray6
-        noSavingGoalsView.backgroundColor = .systemTeal
-        noSavingGoalsView.layer.cornerRadius = 20
-        noSavingGoalsView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(noSavingGoalsView)
         
         noSavingGoalsText.font = .preferredFont(forTextStyle: .title3)
         noSavingGoalsText.textAlignment = .center
         noSavingGoalsView.addSubview(noSavingGoalsText)
         
-        createnewGoalButton.titleLabel?.font = .preferredFont(forTextStyle: .body)
-        createnewGoalButton.setTitleColor(.systemGray, for: .normal)
-        createnewGoalButton.backgroundColor = .systemBackground
-        createnewGoalButton.layer.cornerRadius = 20
-        noSavingGoalsView.addSubview(createnewGoalButton)
+        createNewGoalButton.titleLabel?.font = .preferredFont(forTextStyle: .body)
+        createNewGoalButton.setTitleColor(.systemGray, for: .normal)
+        createNewGoalButton.backgroundColor = .systemBackground
+        createNewGoalButton.layer.cornerRadius = 20
+        noSavingGoalsView.addSubview(createNewGoalButton)
+    
+        view.addSubview(savingsGoalView)
+        
+        savingsGoalTitle.font = .preferredFont(forTextStyle: .title1)
+        savingsGoalTitle.textAlignment = .center
+        savingsGoalView.addSubview(savingsGoalTitle)
+        
+        savingsGoalTotalSaved.font = .preferredFont(forTextStyle: .title3)
+        savingsGoalTotalSaved.textAlignment = .center
+        savingsGoalView.addSubview(savingsGoalTotalSaved)
+        
+        savingsGoalView.addSubview(savingsGoalTarget)
     }
     
     private func setupConstraints() {
@@ -85,12 +106,32 @@ class SavingsViewController: UIViewController {
             make.leading.top.equalToSuperview().offset(20)
             make.trailing.equalToSuperview().inset(10)
         }
-        createnewGoalButton.snp.makeConstraints { make in
+        createNewGoalButton.snp.makeConstraints { make in
             make.top.equalTo(noSavingGoalsText.snp.bottom).offset(20)
             make.leading.equalToSuperview().offset(20)
             make.trailing.equalToSuperview().inset(20)
             make.bottom.equalToSuperview().inset(20)
             make.height.greaterThanOrEqualTo(50)
+        }
+        savingsGoalView.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(10)
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().inset(20)
+        }
+        savingsGoalTitle.snp.makeConstraints { make in
+            make.leading.top.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().inset(10)
+        }
+        savingsGoalTotalSaved.snp.makeConstraints { make in
+            make.top.equalTo(savingsGoalTitle.snp.bottom).offset(20)
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().inset(20)
+        }
+        savingsGoalTarget.snp.makeConstraints { make in
+            make.top.equalTo(savingsGoalTotalSaved.snp.bottom).offset(20)
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().inset(20)
+            make.bottom.equalToSuperview().inset(20)
         }
     }
     
@@ -104,17 +145,25 @@ class SavingsViewController: UIViewController {
             .disposed(by: disposeBag)
         
         viewModel.emptyViewButtonTitle
-            .drive(createnewGoalButton.rx.title())
+            .drive(createNewGoalButton.rx.title())
             .disposed(by: disposeBag)
         
         viewModel.showEmptyView
             .drive(onNext: { [weak self] showEmptyView in
-//                self?.tableView.isHidden = showEmptyView
+                self?.savingsGoalView.isHidden = showEmptyView
                 self?.noSavingGoalsView.isHidden = !showEmptyView
             })
             .disposed(by: disposeBag)
         
-        createnewGoalButton.rx.tapGesture()
+        viewModel.savingsGoalTitle
+            .drive(savingsGoalTitle.rx.text)
+            .disposed(by: disposeBag)
+        
+        viewModel.savingsGoalTotalSaved
+            .drive(savingsGoalTotalSaved.rx.text)
+            .disposed(by: disposeBag)
+        
+        createNewGoalButton.rx.tapGesture()
             .when(.recognized)
             .subscribe(onNext: { [weak self] _ in
                 self?.viewModel.createNewSavingGoal()

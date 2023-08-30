@@ -35,7 +35,7 @@ class MockStarlingRepository: StarlingRepositoryType {
         return .just([SavingsGoal(savingsGoalUid: "123",
                                   name: "Round Up",
                                   currency: nil,
-                                  target: Target(currency: "GBP", minorUnits: 20000),
+                                  target: Target(currency: "GBP", minorUnits: 200000),
                                   totalSaved: nil,
                                   savedPercentage: nil,
                                   state: "ACTIVE")])

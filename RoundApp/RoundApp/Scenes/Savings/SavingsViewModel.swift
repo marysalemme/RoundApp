@@ -33,9 +33,19 @@ class SavingsViewModel {
         return _emptyViewButtonTitle.asDriver()
     }
     
-    private let _savingsGoals = BehaviorRelay<[SavingsGoal]>(value: [])
-    var savingsGoals: Driver<[SavingsGoal]> {
-        return _savingsGoals.asDriver()
+    private let _savingsGoalTitle = BehaviorRelay<String>(value: "")
+    var savingsGoalTitle: Driver<String> {
+        return _savingsGoalTitle.asDriver()
+    }
+    
+    private let _savingsGoalTarget = BehaviorRelay<String>(value: "")
+    var savingsGoalTarget: Driver<String> {
+        return _savingsGoalTarget.asDriver()
+    }
+    
+    private let _savingsGoalTotalSaved = BehaviorRelay<String>(value: "")
+    var savingsGoalTotalSaved: Driver<String> {
+        return _savingsGoalTotalSaved.asDriver()
     }
     
     // MARK: - Inputs
@@ -45,7 +55,7 @@ class SavingsViewModel {
         let goal = SavingsGoal(savingsGoalUid: nil,
                                name: "Round Up",
                                currency: "GBP",
-                               target: Target(currency: "GBP", minorUnits: 20000),
+                               target: Target(currency: "GBP", minorUnits: 200000),
                                totalSaved: nil,
                                savedPercentage: nil,
                                state: nil)
@@ -56,7 +66,8 @@ class SavingsViewModel {
             .subscribe { event in
                 switch event {
                 case .success(let savingGoals):
-                    self._savingsGoals.accept(savingGoals)
+                    guard let savingGoal = savingGoals.first else { return }
+                    self.setupSavingsGoalBindings(for: savingGoal)
                     self._showEmptyView.accept(false)
                 case .failure(let error):
                     print(error)
@@ -73,7 +84,6 @@ class SavingsViewModel {
     
     private let accountID: String
     
-    /// The dispose bag for the view model. Used to dispose of any subscriptions.
     private let disposeBag = DisposeBag()
     
     // MARK: - Initializer
@@ -91,7 +101,8 @@ class SavingsViewModel {
                     if savingGoals.isEmpty {
                         self._showEmptyView.accept(true)
                     } else {
-                        self._savingsGoals.accept(savingGoals)
+                        guard let savingGoal = savingGoals.first else { return }
+                        self.setupSavingsGoalBindings(for: savingGoal)
                         self._showEmptyView.accept(false)
                     }
                 case .failure(let error):
@@ -100,5 +111,10 @@ class SavingsViewModel {
                 }
             }
             .disposed(by: disposeBag)
+    }
+    
+    private func setupSavingsGoalBindings(for goal: SavingsGoal) {
+        self._savingsGoalTitle.accept(goal.name)
+        self._savingsGoalTotalSaved.accept("\(goal.target.currency) \(goal.totalSaved?.minorUnits.toDecimal() ?? 0.0)/\(goal.target.minorUnits.toDecimal())")
     }
 }

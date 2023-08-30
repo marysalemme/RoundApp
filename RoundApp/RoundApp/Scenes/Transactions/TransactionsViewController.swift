@@ -14,9 +14,9 @@ import SnapKit
 
 class TransactionsViewController: UIViewController {
     
-    // MARK: - Properties
+    // MARK: - Subviews
     
-    let roundUpContainer: UIView
+    let roundUpContainer: ContainerView
     
     let roundUpSectionTitle: UILabel
     
@@ -26,13 +26,15 @@ class TransactionsViewController: UIViewController {
     
     let tableView: UITableView
     
+    // MARK: - Properties
+    
     var viewModel: TransactionsViewModel
     
     var disposeBag = DisposeBag()
     
     /// Initializes a `TransactionsViewController` with a `TransactionsViewModel`.
     init(viewModel: TransactionsViewModel) {
-        self.roundUpContainer = UIView(frame: .zero)
+        self.roundUpContainer = ContainerView(frame: .zero)
         self.roundUpSectionTitle = UILabel(frame: .zero)
         self.roundUpAmount = UILabel(frame: .zero)
         self.addToSavingsButton = UIButton(frame: .zero)
@@ -56,9 +58,6 @@ class TransactionsViewController: UIViewController {
     private func setupUI() {
         navigationController?.navigationBar.isTranslucent = false
         view.backgroundColor = .systemGray6
-        roundUpContainer.backgroundColor = .systemTeal
-        roundUpContainer.layer.cornerRadius = 20
-        roundUpContainer.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(roundUpContainer)
         
         roundUpSectionTitle.font = .preferredFont(forTextStyle: .title3)

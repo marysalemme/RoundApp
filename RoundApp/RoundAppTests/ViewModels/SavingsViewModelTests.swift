@@ -40,10 +40,11 @@ final class SavingsViewModelTests: XCTestCase {
         XCTAssertEqual(try buttonTextDriver.toBlocking(timeout: 1).first(), "Create a new saving goal")
     }
     
-    func testSavingGoals() {
+    func testSavingGoal() {
         sut.createNewSavingGoal()
-        let driver = sut.savingsGoals.asObservable().subscribe(on: scheduler)
-        XCTAssertEqual(try driver.toBlocking(timeout: 1).first()?.count, 1)
-        XCTAssertEqual(try driver.toBlocking(timeout: 1).first()?.first?.name, "Round Up")
+        let titleDriver = sut.savingsGoalTitle.asObservable().subscribe(on: scheduler)
+        let savedDriver = sut.savingsGoalTotalSaved.asObservable().subscribe(on: scheduler)
+        XCTAssertEqual(try titleDriver.toBlocking(timeout: 1).first(), "Round Up")
+        XCTAssertEqual(try savedDriver.toBlocking(timeout: 1).first(), "GBP 0/2000")
     }
 }

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A11A0E72A9E75BA009ECF25 /* ContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A11A0E62A9E75BA009ECF25 /* ContainerView.swift */; };
 		1A15191C2A8F7ADD00A5915C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A15191B2A8F7ADD00A5915C /* AppDelegate.swift */; };
 		1A15191E2A8F7ADD00A5915C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A15191D2A8F7ADD00A5915C /* SceneDelegate.swift */; };
 		1A1519252A8F7ADE00A5915C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A1519242A8F7ADE00A5915C /* Assets.xcassets */; };
@@ -49,6 +50,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1A11A0E62A9E75BA009ECF25 /* ContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerView.swift; sourceTree = "<group>"; };
 		1A1519182A8F7ADD00A5915C /* RoundApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RoundApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A15191B2A8F7ADD00A5915C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1A15191D2A8F7ADD00A5915C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -107,6 +109,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1A11A0E52A9E7574009ECF25 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				1A11A0E62A9E75BA009ECF25 /* ContainerView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
 		1A15190F2A8F7ADD00A5915C = {
 			isa = PBXGroup;
 			children = (
@@ -130,6 +140,7 @@
 		1A15191A2A8F7ADD00A5915C /* RoundApp */ = {
 			isa = PBXGroup;
 			children = (
+				1A11A0E52A9E7574009ECF25 /* Components */,
 				1A47534C2A91262C00BBD846 /* Extensions */,
 				1A91F9B82A8FF3AE000EB10B /* Coordinators */,
 				1A91F9B22A8FF311000EB10B /* Scenes */,
@@ -462,6 +473,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1A11A0E72A9E75BA009ECF25 /* ContainerView.swift in Sources */,
 				1A2C97DC2A9CEDF90046A4EB /* HTTPMethod.swift in Sources */,
 				1A4753562A912B1400BBD846 /* TransactionCell.swift in Sources */,
 				1ACE03832A90F928007B3A46 /* FeedItem.swift in Sources */,
