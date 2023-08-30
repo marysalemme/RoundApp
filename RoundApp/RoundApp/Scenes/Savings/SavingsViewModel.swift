@@ -38,14 +38,14 @@ class SavingsViewModel {
         return _savingsGoalTitle.asDriver()
     }
     
-    private let _savingsGoalTarget = BehaviorRelay<String>(value: "")
-    var savingsGoalTarget: Driver<String> {
-        return _savingsGoalTarget.asDriver()
-    }
-    
     private let _savingsGoalTotalSaved = BehaviorRelay<String>(value: "")
     var savingsGoalTotalSaved: Driver<String> {
         return _savingsGoalTotalSaved.asDriver()
+    }
+    
+    private let _addMoneyButtonTitle = BehaviorRelay<String>(value: "Add round up to Savings Goal")
+    var addMoneyButtonTitle: Driver<String> {
+        return _addMoneyButtonTitle.asDriver()
     }
     
     // MARK: - Inputs
@@ -60,20 +60,36 @@ class SavingsViewModel {
                                savedPercentage: nil,
                                state: nil)
         repository.createSavingGoal(accountID: accountID, goal: goal)
-            .flatMap { savingGoalCreated -> Single<[SavingsGoal]> in
-                return self.repository.getSavingGoals(accountID: self.accountID)
-            }
             .subscribe { event in
                 switch event {
-                case .success(let savingGoals):
-                    guard let savingGoal = savingGoals.first else { return }
-                    self.setupSavingsGoalBindings(for: savingGoal)
-                    self._showEmptyView.accept(false)
+                case .success(let goalCreated):
+                    self.savingsGoalId = goalCreated.savingsGoalUid
                 case .failure(let error):
+                    // Handle error
                     print(error)
                 }
             }
             .disposed(by: disposeBag)
+    }
+    
+    func addRoundUpMoney() {
+        guard let savingsGoalId = savingsGoalId else {
+            assertionFailure("Attempted to add money to saving goal without a saving goal ID")
+            return
+        }
+        let transferRequest = SavingsGoalTransferRequest(amount: Amount(currency: "GBP", minorUnits: roundUpAmount))
+        repository.addMoneyToSavingGoal(accountID: accountID, savingsGoalID: savingsGoalId, transferRequest: transferRequest)
+            .subscribe { event in
+                switch event {
+                case .success(let transfer):
+                    print(transfer)
+                case .failure(let error):
+                    // Handle error
+                    print(error)
+                }
+            }
+            .disposed(by: disposeBag)
+    
     }
     
     // MARK: - Dependencies
@@ -82,12 +98,17 @@ class SavingsViewModel {
     
     private let repository: StarlingRepositoryType
     
+    private let roundUpAmount: Int
+    
     private let accountID: String
     
     private let disposeBag = DisposeBag()
     
+    private var savingsGoalId: String?
+    
     // MARK: - Initializer
-    init(accountID: String, repository: StarlingRepositoryType) {
+    init(roundUpAmount: Int, accountID: String, repository: StarlingRepositoryType) {
+        self.roundUpAmount = roundUpAmount
         self.accountID = accountID
         self.repository = repository
     }
@@ -97,12 +118,13 @@ class SavingsViewModel {
             .getSavingGoals(accountID: accountID)
             .subscribe { event in
                 switch event {
-                case .success(let savingGoals):
-                    if savingGoals.isEmpty {
+                case .success(let savingsGoals):
+                    if savingsGoals.isEmpty {
                         self._showEmptyView.accept(true)
                     } else {
-                        guard let savingGoal = savingGoals.first else { return }
-                        self.setupSavingsGoalBindings(for: savingGoal)
+                        guard let savingsGoal = savingsGoals.first else { return }
+                        self.setupSavingsGoalBindings(for: savingsGoal)
+                        self.savingsGoalId = savingsGoal.savingsGoalUid
                         self._showEmptyView.accept(false)
                     }
                 case .failure(let error):

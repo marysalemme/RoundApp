@@ -94,6 +94,7 @@ class TransactionsViewController: UIViewController {
             make.trailing.equalToSuperview().inset(10)
         }
         if addToSavingsButton.isHidden {
+            addToSavingsButton.snp.removeConstraints()
             roundUpAmount.snp.remakeConstraints { make in
                 make.top.equalTo(roundUpSectionTitle.snp.bottom).offset(10)
                 make.leading.equalToSuperview().offset(20)

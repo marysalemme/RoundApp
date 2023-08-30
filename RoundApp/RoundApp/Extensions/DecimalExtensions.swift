@@ -14,4 +14,8 @@ extension Decimal {
         NSDecimalRound(&rounded, &decimal, 0, .up)
         return rounded
     }
+    
+    func toInt() -> Int {
+        return NSDecimalNumber(decimal: self).intValue
+    }
 }

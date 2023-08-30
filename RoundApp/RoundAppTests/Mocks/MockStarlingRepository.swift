@@ -44,6 +44,12 @@ class MockStarlingRepository: StarlingRepositoryType {
     func createSavingGoal(accountID: String, goal: SavingsGoal) -> Single<SavingsGoalCreated> {
         return .just(SavingsGoalCreated(savingsGoalUid: "123", success: true))
     }
+    
+    func addMoneyToSavingGoal(accountID: String,
+                              savingsGoalID: String,
+                              transferRequest: RoundApp.SavingsGoalTransferRequest) -> RxSwift.Single<RoundApp.SavingsGoalTransfer> {
+        return .just(SavingsGoalTransfer(transferUid: "123", success: true))
+    }
 }
 
 class MockStarlingRepositoryEmptyData: StarlingRepositoryType {
@@ -65,6 +71,12 @@ class MockStarlingRepositoryEmptyData: StarlingRepositoryType {
     
     func createSavingGoal(accountID: String, goal: SavingsGoal) -> Single<SavingsGoalCreated> {
         return .just(SavingsGoalCreated(savingsGoalUid: "123", success: true))
+    }
+    
+    func addMoneyToSavingGoal(accountID: String,
+                              savingsGoalID: String,
+                              transferRequest: RoundApp.SavingsGoalTransferRequest) -> RxSwift.Single<RoundApp.SavingsGoalTransfer> {
+        return .just(SavingsGoalTransfer(transferUid: "123", success: true))
     }
 }
 
@@ -89,5 +101,11 @@ class MockStarlingRepositoryZeroRoundUp: StarlingRepositoryType {
     
     func createSavingGoal(accountID: String, goal: SavingsGoal) -> Single<SavingsGoalCreated> {
         return .just(SavingsGoalCreated(savingsGoalUid: "123", success: true))
+    }
+    
+    func addMoneyToSavingGoal(accountID: String,
+                              savingsGoalID: String,
+                              transferRequest: RoundApp.SavingsGoalTransferRequest) -> RxSwift.Single<RoundApp.SavingsGoalTransfer> {
+        return .just(SavingsGoalTransfer(transferUid: "123", success: true))
     }
 }

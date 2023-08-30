@@ -28,7 +28,7 @@ class SavingsViewController: UIViewController {
     
     let savingsGoalTotalSaved: UILabel
 
-    let savingsGoalTarget: UIProgressView
+    let addMoneyButton: UIButton
     
     // MARK: - Properties
     
@@ -49,7 +49,8 @@ class SavingsViewController: UIViewController {
         self.savingsGoalView = ContainerView(frame: .zero)
         self.savingsGoalTitle = UILabel(frame: .zero)
         self.savingsGoalTotalSaved = UILabel(frame: .zero)
-        self.savingsGoalTarget = UIProgressView(progressViewStyle: .default)
+        self.addMoneyButton = UIButton(frame: .zero)
+//        self.savingsGoalTarget = UIProgressView(progressViewStyle: .default)
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
         setupUI()
@@ -93,7 +94,11 @@ class SavingsViewController: UIViewController {
         savingsGoalTotalSaved.textAlignment = .center
         savingsGoalView.addSubview(savingsGoalTotalSaved)
         
-        savingsGoalView.addSubview(savingsGoalTarget)
+        addMoneyButton.titleLabel?.font = .preferredFont(forTextStyle: .body)
+        addMoneyButton.setTitleColor(.systemGray, for: .normal)
+        addMoneyButton.backgroundColor = .systemBackground
+        addMoneyButton.layer.cornerRadius = 20
+        savingsGoalView.addSubview(addMoneyButton)
     }
     
     private func setupConstraints() {
@@ -127,11 +132,12 @@ class SavingsViewController: UIViewController {
             make.leading.equalToSuperview().offset(20)
             make.trailing.equalToSuperview().inset(20)
         }
-        savingsGoalTarget.snp.makeConstraints { make in
+        addMoneyButton.snp.makeConstraints { make in
             make.top.equalTo(savingsGoalTotalSaved.snp.bottom).offset(20)
             make.leading.equalToSuperview().offset(20)
             make.trailing.equalToSuperview().inset(20)
             make.bottom.equalToSuperview().inset(20)
+            make.height.greaterThanOrEqualTo(50)
         }
     }
     
@@ -163,10 +169,21 @@ class SavingsViewController: UIViewController {
             .drive(savingsGoalTotalSaved.rx.text)
             .disposed(by: disposeBag)
         
+        viewModel.addMoneyButtonTitle
+            .drive(addMoneyButton.rx.title())
+            .disposed(by: disposeBag)
+        
         createNewGoalButton.rx.tapGesture()
             .when(.recognized)
             .subscribe(onNext: { [weak self] _ in
                 self?.viewModel.createNewSavingGoal()
+            })
+            .disposed(by: disposeBag)
+        
+        addMoneyButton.rx.tapGesture()
+            .when(.recognized)
+            .subscribe(onNext: { [weak self] _ in
+                self?.viewModel.addRoundUpMoney()
             })
             .disposed(by: disposeBag)
     }

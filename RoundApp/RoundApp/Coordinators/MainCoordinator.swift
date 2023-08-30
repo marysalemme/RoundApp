@@ -46,8 +46,8 @@ class MainCoordinator: Coordinator {
         navigationController.pushViewController(transactionsViewController, animated: false)
     }
     
-    func addToSavings(amount: Decimal, for accountID: String) {
-        let savingsViewModel = SavingsViewModel(accountID: accountID, repository: repository)
+    func addToSavings(amount: Int, for accountID: String) {
+        let savingsViewModel = SavingsViewModel(roundUpAmount: amount, accountID: accountID, repository: repository)
         savingsViewModel.coordinator = self
         let savingsViewController = SavingsViewController(viewModel: savingsViewModel)
         navigationController.pushViewController(savingsViewController, animated: false)

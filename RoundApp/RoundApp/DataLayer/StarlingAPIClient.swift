@@ -16,6 +16,8 @@ protocol StarlingAPIClientType {
     func getSavingGoals(accountID: String) async throws -> [SavingsGoal]
     
     func createSavingGoal(accountID: String, goal: SavingsGoal) async throws -> SavingsGoalCreated
+    
+    func addMoneyToSavingGoal(accountID: String, savingsGoalID: String, transferRequest: SavingsGoalTransferRequest) async throws -> SavingsGoalTransfer
 }
 
 class StarlingAPIClient: StarlingAPIClientType {
@@ -32,6 +34,7 @@ class StarlingAPIClient: StarlingAPIClientType {
         case accounts
         case transactions(accountID: String, categoryID: String)
         case savingGoals(accountID: String)
+        case addToSavingGoal(accountID: String, savingsGoalID: String, transferID: String)
         
         var value: String {
             switch self {
@@ -41,6 +44,8 @@ class StarlingAPIClient: StarlingAPIClientType {
                 return "feed/account/\(accountID)/category/\(categoryID)"
             case let .savingGoals(accountID):
                 return "account/\(accountID)/savings-goals"
+            case let .addToSavingGoal(accountID, savingsGoalID, transferID):
+                return "account/\(accountID)/savings-goals/\(savingsGoalID)/add-money/\(transferID)"
             }
         }
     }
@@ -91,6 +96,21 @@ class StarlingAPIClient: StarlingAPIClientType {
         do {
             let decoder = JSONDecoder()
             return try decoder.decode(SavingsGoalCreated.self, from: data)
+        } catch {
+            throw NetworkError.invalidData
+        }
+    }
+    
+    func addMoneyToSavingGoal(accountID: String,
+                              savingsGoalID: String,
+                              transferRequest: SavingsGoalTransferRequest) async throws -> SavingsGoalTransfer {
+        let body = try encodeBody(transferRequest)
+        let data = try await loadData(for: .addToSavingGoal(accountID: accountID, savingsGoalID: savingsGoalID, transferID: UUID().uuidString),
+                                      body: body,
+                                      httpMethod: .put)
+        do {
+            let decoder = JSONDecoder()
+            return try decoder.decode(SavingsGoalTransfer.self, from: data)
         } catch {
             throw NetworkError.invalidData
         }

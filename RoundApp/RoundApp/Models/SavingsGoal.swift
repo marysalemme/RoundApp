@@ -31,3 +31,12 @@ struct SavingsGoalCreated: Codable {
     let success: Bool
 }
 
+struct SavingsGoalTransferRequest: Codable {
+    let amount: Amount
+}
+
+struct SavingsGoalTransfer: Codable {
+    let transferUid: String
+    let success: Bool
+}
+

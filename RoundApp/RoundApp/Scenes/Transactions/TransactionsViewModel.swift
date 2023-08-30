@@ -52,7 +52,7 @@ class TransactionsViewModel {
             assertionFailure("Coordinator, roundUpAmount and account ID should not be nil when add to savings button is enabled")
             return
         }
-        coordinator.addToSavings(amount: roundUpAmount, for: accountID)
+        coordinator.addToSavings(amount: roundUpAmount.toInt(), for: accountID)
     }
     
     // MARK: - Dependencies
