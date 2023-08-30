@@ -67,3 +67,27 @@ class MockStarlingRepositoryEmptyData: StarlingRepositoryType {
         return .just(SavingsGoalCreated(savingsGoalUid: "123", success: true))
     }
 }
+
+class MockStarlingRepositoryZeroRoundUp: StarlingRepositoryType {
+    func getPrimaryAccount() -> Single<Account> {
+        return Single.just(Account(accountUid: "123",
+                                   accountType: "PRIMARY",
+                                   defaultCategory: "123123",
+                                   currency: "GBP",
+                                   name: "Personal"))
+    }
+    
+    func getTransactions(accountID: String, categoryID: String, sinceDate: String) -> Single<[FeedItem]> {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        return Single.just([FeedItem(feedItemUid: "123", categoryUid: "123123", amount: Amount(currency: "GBP", minorUnits: 2300), direction: "OUT", transactionTime:  dateFormatter.date(from: "2023-08-19T12:37:14.893Z")!)])
+    }
+    
+    func getSavingGoals(accountID: String) -> Single<[SavingsGoal]> {
+        return .just([])
+    }
+    
+    func createSavingGoal(accountID: String, goal: SavingsGoal) -> Single<SavingsGoalCreated> {
+        return .just(SavingsGoalCreated(savingsGoalUid: "123", success: true))
+    }
+}

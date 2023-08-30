@@ -33,6 +33,11 @@ class TransactionsViewModel {
         return _addToSavingsButtonTitle.asDriver()
     }
     
+    private let _showAddToSavingsButton = BehaviorRelay<Bool>(value: false)
+    var showAddToSavingsButton: Driver<Bool> {
+        return _showAddToSavingsButton.asDriver()
+    }
+    
     private let _transactions = BehaviorRelay<[FeedItem]>(value: [])
     var transactions: Driver<[FeedItem]> {
         return _transactions.asDriver()
@@ -41,11 +46,13 @@ class TransactionsViewModel {
     // MARK: - Inputs
     
     func addToSavings() {
-        guard let coordinator = coordinator, let accountID = accountID else {
-            assertionFailure("Coordinator and account ID should not be nil when add to savings button is enabled")
+        guard let coordinator = coordinator,
+                let roundUpAmount = roundUpAmount,
+                let accountID = accountID else {
+            assertionFailure("Coordinator, roundUpAmount and account ID should not be nil when add to savings button is enabled")
             return
         }
-        coordinator.goToSavings(for: accountID)
+        coordinator.addToSavings(amount: roundUpAmount, for: accountID)
     }
     
     // MARK: - Dependencies
@@ -59,6 +66,9 @@ class TransactionsViewModel {
     /// The account ID used to fetch the transactions.
     /// Required to navigate to the savings scene.
     private var accountID: String?
+    
+    /// The round up amount used to add to the savings goal.
+    private var roundUpAmount: Decimal?
 
     /// The dispose bag for the view model. Used to dispose of any subscriptions.
     private let disposeBag = DisposeBag()
@@ -82,10 +92,17 @@ class TransactionsViewModel {
                 case .success(let transactions):
                     if transactions.isEmpty {
                         self._totalRoundUpAmount.accept("0 GBP")
+                        self._showAddToSavingsButton.accept(false)
                         // TODO: Show empty state
                     } else {
-                        let roundUpAmount = self.calculateRoundUpAmount(transactions: transactions)
-                        self._totalRoundUpAmount.accept("\(roundUpAmount) GBP")
+                        self.roundUpAmount = self.calculateRoundUpAmount(transactions: transactions)
+                        if let roundUpAmount = self.roundUpAmount, roundUpAmount != 0.00 {
+                            self._totalRoundUpAmount.accept("\(roundUpAmount) GBP")
+                            self._showAddToSavingsButton.accept(true)
+                        } else {
+                            self._totalRoundUpAmount.accept("0 GBP")
+                            self._showAddToSavingsButton.accept(false)
+                        }
                     }
                     self._transactions.accept(transactions)
                 case .failure(let error):

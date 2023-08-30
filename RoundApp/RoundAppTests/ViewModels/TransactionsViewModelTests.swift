@@ -44,15 +44,35 @@ final class TransactionsViewModelTests: XCTestCase {
     
     func testTotalRoundUpAmount() {
         sut.loadAccountTransactions()
-        let driver = sut.totalRoundUpAmount.asObservable().subscribe(on: scheduler)
-        XCTAssertEqual(try driver.toBlocking(timeout: 1).first(), "1.72 GBP")
+        let roundUpAmountDriver = sut.totalRoundUpAmount.asObservable().subscribe(on: scheduler)
+        let showAddToSavingsButtonDriver = sut.showAddToSavingsButton.asObservable().subscribe(on: scheduler)
+        XCTAssertEqual(try roundUpAmountDriver.toBlocking(timeout: 1).first(), "1.72 GBP")
+        XCTAssertEqual(try showAddToSavingsButtonDriver.toBlocking(timeout: 1).first(), true)
     }
     
     func testTotalRoundUpAmountWhenNoTransactions() {
         mockRepository = MockStarlingRepositoryEmptyData()
         sut = TransactionsViewModel(repository: mockRepository)
         sut.loadAccountTransactions()
-        let driver = sut.totalRoundUpAmount.asObservable().subscribe(on: scheduler)
-        XCTAssertEqual(try driver.toBlocking(timeout: 1).first(), "0 GBP")
+        let roundUpAmountDriver = sut.totalRoundUpAmount.asObservable().subscribe(on: scheduler)
+        let showAddToSavingsButtonDriver = sut.showAddToSavingsButton.asObservable().subscribe(on: scheduler)
+        XCTAssertEqual(try roundUpAmountDriver.toBlocking(timeout: 1).first(), "0 GBP")
+        XCTAssertEqual(try showAddToSavingsButtonDriver.toBlocking(timeout: 1).first(), false)
+    }
+    
+    func testTotalRoundUpAmountWhenRoundUpAmountIsZero() {
+        mockRepository = MockStarlingRepositoryZeroRoundUp()
+        sut = TransactionsViewModel(repository: mockRepository)
+        sut.loadAccountTransactions()
+        let roundUpAmountDriver = sut.totalRoundUpAmount.asObservable().subscribe(on: scheduler)
+        let showAddToSavingsButtonDriver = sut.showAddToSavingsButton.asObservable().subscribe(on: scheduler)
+        XCTAssertEqual(try roundUpAmountDriver.toBlocking(timeout: 1).first(), "0 GBP")
+        XCTAssertEqual(try showAddToSavingsButtonDriver.toBlocking(timeout: 1).first(), false)
+    }
+    
+    func testAddToSavingsButtonTitle() {
+        sut.loadAccountTransactions()
+        let driver = sut.addToSavingsButtonTitle.asObservable().subscribe(on: scheduler)
+        XCTAssertEqual(try driver.toBlocking(timeout: 1).first(), "Add to Savings Goal")
     }
 }

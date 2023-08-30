@@ -93,17 +93,26 @@ class TransactionsViewController: UIViewController {
             make.leading.top.equalToSuperview().offset(20)
             make.trailing.equalToSuperview().inset(10)
         }
-        roundUpAmount.snp.makeConstraints { make in
-            make.top.equalTo(roundUpSectionTitle.snp.bottom).offset(10)
-            make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().inset(10)
-        }
-        addToSavingsButton.snp.makeConstraints { make in
-            make.top.equalTo(roundUpAmount.snp.bottom).offset(20)
-            make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().inset(20)
-            make.bottom.equalToSuperview().inset(20)
-            make.height.greaterThanOrEqualTo(50)
+        if addToSavingsButton.isHidden {
+            roundUpAmount.snp.remakeConstraints { make in
+                make.top.equalTo(roundUpSectionTitle.snp.bottom).offset(10)
+                make.leading.equalToSuperview().offset(20)
+                make.trailing.equalToSuperview().inset(10)
+                make.bottom.equalToSuperview().inset(20)
+            }
+        } else {
+            roundUpAmount.snp.remakeConstraints { make in
+                make.top.equalTo(roundUpSectionTitle.snp.bottom).offset(10)
+                make.leading.equalToSuperview().offset(20)
+                make.trailing.equalToSuperview().inset(10)
+            }
+            addToSavingsButton.snp.remakeConstraints { make in
+                make.top.equalTo(roundUpAmount.snp.bottom).offset(20)
+                make.leading.equalToSuperview().offset(20)
+                make.trailing.equalToSuperview().inset(20)
+                make.bottom.equalToSuperview().inset(20)
+                make.height.greaterThanOrEqualTo(50)
+            }
         }
         tableView.snp.makeConstraints { make in
             make.top.equalTo(roundUpContainer.snp.bottom).offset(20)
@@ -127,6 +136,13 @@ class TransactionsViewController: UIViewController {
         
         viewModel.addToSavingsButtonTitle
             .drive(addToSavingsButton.rx.title())
+            .disposed(by: disposeBag)
+        
+        viewModel.showAddToSavingsButton
+            .drive(onNext: { [weak self] showButton in
+                self?.addToSavingsButton.isHidden = !showButton
+                self?.setupConstraints()
+            })
             .disposed(by: disposeBag)
         
         addToSavingsButton.rx.tapGesture()
