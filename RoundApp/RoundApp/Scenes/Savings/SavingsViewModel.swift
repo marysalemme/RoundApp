@@ -98,7 +98,7 @@ class SavingsViewModel {
                     self._showEmptyView.accept(false)
                 case .failure(let error):
                     self._showError.accept(true)
-                    self._errorMessage.accept(error.localizedDescription)
+                    self._errorMessage.accept(ErrorManager.handleError(error: error))
                 }
                 self._showLoading.accept(false)
             }
@@ -124,7 +124,7 @@ class SavingsViewModel {
                     self._showSavingsGoal.accept(true)
                 case .failure(let error):
                     self._showError.accept(true)
-                    self._errorMessage.accept(error.localizedDescription)
+                    self._errorMessage.accept(ErrorManager.handleError(error: error))
                 }
                 self._showLoading.accept(false)
             }
@@ -167,7 +167,7 @@ class SavingsViewModel {
                     }
                 case .failure(let error):
                     self._showError.accept(true)
-                    self._errorMessage.accept(error.localizedDescription)
+                    self._errorMessage.accept(ErrorManager.handleError(error: error))
                 }
                 self._showLoading.accept(false)
             }

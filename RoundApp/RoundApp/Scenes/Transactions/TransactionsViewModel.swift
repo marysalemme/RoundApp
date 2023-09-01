@@ -120,7 +120,7 @@ class TransactionsViewModel {
                     self._transactions.accept(transactions)
                 case .failure(let error):
                     self._showError.accept(true)
-                    self._errorMessage.accept(error.localizedDescription)
+                    self._errorMessage.accept(ErrorManager.handleError(error: error))
                 }
                 self._showLoading.accept(false)
             }

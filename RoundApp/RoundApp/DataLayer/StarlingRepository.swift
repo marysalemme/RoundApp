@@ -43,7 +43,7 @@ class StarlingRepository: StarlingRepositoryType {
                     if let account = accounts.first(where: { $0.accountType == "PRIMARY" }) {
                         single(.success(account))
                     } else {
-                        single(.failure(StarlingError.primaryAccountNotFound))
+                        single(.failure(RoundAppError.primaryAccountNotFound))
                     }
                 } catch {
                     single(.failure(error))

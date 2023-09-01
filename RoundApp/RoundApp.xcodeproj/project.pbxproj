@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1A11A0E72A9E75BA009ECF25 /* ContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A11A0E62A9E75BA009ECF25 /* ContainerView.swift */; };
+		1A11A0EC2AA25CB2009ECF25 /* ErrorManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A11A0EB2AA25CB2009ECF25 /* ErrorManager.swift */; };
 		1A15191C2A8F7ADD00A5915C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A15191B2A8F7ADD00A5915C /* AppDelegate.swift */; };
 		1A15191E2A8F7ADD00A5915C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A15191D2A8F7ADD00A5915C /* SceneDelegate.swift */; };
 		1A1519252A8F7ADE00A5915C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A1519242A8F7ADE00A5915C /* Assets.xcassets */; };
@@ -51,6 +52,7 @@
 
 /* Begin PBXFileReference section */
 		1A11A0E62A9E75BA009ECF25 /* ContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerView.swift; sourceTree = "<group>"; };
+		1A11A0EB2AA25CB2009ECF25 /* ErrorManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorManager.swift; sourceTree = "<group>"; };
 		1A1519182A8F7ADD00A5915C /* RoundApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RoundApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A15191B2A8F7ADD00A5915C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1A15191D2A8F7ADD00A5915C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -117,6 +119,14 @@
 			path = Components;
 			sourceTree = "<group>";
 		};
+		1A11A0EA2AA25C9E009ECF25 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				1A11A0EB2AA25CB2009ECF25 /* ErrorManager.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
 		1A15190F2A8F7ADD00A5915C = {
 			isa = PBXGroup;
 			children = (
@@ -140,6 +150,7 @@
 		1A15191A2A8F7ADD00A5915C /* RoundApp */ = {
 			isa = PBXGroup;
 			children = (
+				1A11A0EA2AA25C9E009ECF25 /* Utils */,
 				1A11A0E52A9E7574009ECF25 /* Components */,
 				1A47534C2A91262C00BBD846 /* Extensions */,
 				1A91F9B82A8FF3AE000EB10B /* Coordinators */,
@@ -482,6 +493,7 @@
 				1A91F9AF2A8FD8E7000EB10B /* StarlingAPIClient.swift in Sources */,
 				1A4753582A92200300BBD846 /* DecimalExtensions.swift in Sources */,
 				1A15191C2A8F7ADD00A5915C /* AppDelegate.swift in Sources */,
+				1A11A0EC2AA25CB2009ECF25 /* ErrorManager.swift in Sources */,
 				1A47534B2A91259000BBD846 /* DateExtensions.swift in Sources */,
 				1A91F9B52A8FF38C000EB10B /* TransactionsViewModel.swift in Sources */,
 				1A4A61EA2A9BA0F400941B58 /* SavingsViewController.swift in Sources */,

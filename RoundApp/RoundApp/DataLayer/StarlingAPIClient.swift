@@ -69,7 +69,7 @@ class StarlingAPIClient: StarlingAPIClientType {
             let decoder = JSONDecoder()
             return try decoder.decode(Response.self, from: data).accounts
         } catch {
-            throw NetworkError.invalidData
+            throw RoundAppError.invalidData
         }
     }
     
@@ -79,7 +79,7 @@ class StarlingAPIClient: StarlingAPIClientType {
             let decoder = JSONDecoder()
             return try decoder.decode(TransactionResponse.self, from: data).feedItems
         } catch {
-            throw NetworkError.invalidData
+            throw RoundAppError.invalidData
         }
     }
     
@@ -89,7 +89,7 @@ class StarlingAPIClient: StarlingAPIClientType {
             let decoder = JSONDecoder()
             return try decoder.decode(SavingsGoalsResponse.self, from: data).savingsGoalList
         } catch {
-            throw NetworkError.invalidData
+            throw RoundAppError.invalidData
         }
     }
     
@@ -99,7 +99,7 @@ class StarlingAPIClient: StarlingAPIClientType {
             let decoder = JSONDecoder()
             return try decoder.decode(SavingsGoal.self, from: data)
         } catch {
-            throw NetworkError.invalidData
+            throw RoundAppError.invalidData
         }
     }
     
@@ -112,7 +112,7 @@ class StarlingAPIClient: StarlingAPIClientType {
             let decoder = JSONDecoder()
             return try decoder.decode(SavingsGoalCreated.self, from: data)
         } catch {
-            throw NetworkError.invalidData
+            throw RoundAppError.invalidData
         }
     }
     
@@ -127,7 +127,7 @@ class StarlingAPIClient: StarlingAPIClientType {
             let decoder = JSONDecoder()
             return try decoder.decode(SavingsGoalTransfer.self, from: data)
         } catch {
-            throw NetworkError.invalidData
+            throw RoundAppError.invalidData
         }
     }
     
@@ -155,7 +155,7 @@ class StarlingAPIClient: StarlingAPIClientType {
     
     private func setQueryParameters(of urlRequest: inout URLRequest, parameters: [String:String]) throws {
         guard let url = urlRequest.url else {
-            throw NetworkError.missingURL
+            throw RoundAppError.missingURL
         }
         if var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false) {
             urlComponents.queryItems = [URLQueryItem]()
@@ -178,14 +178,14 @@ class StarlingAPIClient: StarlingAPIClientType {
     
     private func composeURL(for endpoint: Endpoint) throws -> URL {
         guard let url = URL(string: "\(baseURL)/\(endpoint.value)") else {
-            throw NetworkError.invalidURL
+            throw RoundAppError.invalidURL
         }
         return url
     }
     
     private func checkResponse(_ response: URLResponse) throws {
         guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-            throw NetworkError.invalidResponse
+            throw RoundAppError.invalidResponse
         }
     }
     
@@ -194,7 +194,7 @@ class StarlingAPIClient: StarlingAPIClientType {
             let encoder = JSONEncoder()
             return try encoder.encode(body)
         } catch {
-            throw NetworkError.invalidBody
+            throw RoundAppError.invalidBody
         }
     }
 }
