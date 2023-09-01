@@ -98,28 +98,30 @@ class TransactionsViewController: UIViewController {
     }
     
     private func setupConstraints() {
-        roundUpContainer.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(10)
-            make.leading.equalToSuperview().offset(Sizes.mediumMargin.value)
-            make.trailing.equalToSuperview().inset(Sizes.mediumMargin.value)
-        }
-        roundUpSectionTitle.snp.makeConstraints { make in
-            make.leading.top.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().inset(10)
-        }
-        if addToSavingsButton.isHidden {
+        if roundUpContainer.isHidden {
+            roundUpContainer.snp.removeConstraints()
+            roundUpSectionTitle.snp.removeConstraints()
             addToSavingsButton.snp.removeConstraints()
-            roundUpAmount.snp.remakeConstraints { make in
-                make.top.equalTo(roundUpSectionTitle.snp.bottom).offset(10)
-                make.leading.equalToSuperview().offset(Sizes.mediumMargin.value)
-                make.trailing.equalToSuperview().inset(10)
-                make.bottom.equalToSuperview().inset(Sizes.mediumMargin.value)
+            roundUpAmount.snp.removeConstraints()
+            tableView.snp.remakeConstraints { make in
+                make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(Sizes.smallMargin.value)
+                make.horizontalEdges.equalToSuperview()
+                make.bottom.equalToSuperview()
             }
         } else {
-            roundUpAmount.snp.remakeConstraints { make in
-                make.top.equalTo(roundUpSectionTitle.snp.bottom).offset(10)
+            roundUpContainer.snp.remakeConstraints { make in
+                make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(Sizes.smallMargin.value)
                 make.leading.equalToSuperview().offset(Sizes.mediumMargin.value)
-                make.trailing.equalToSuperview().inset(10)
+                make.trailing.equalToSuperview().inset(Sizes.mediumMargin.value)
+            }
+            roundUpSectionTitle.snp.remakeConstraints { make in
+                make.leading.top.equalToSuperview().offset(Sizes.mediumMargin.value)
+                make.trailing.equalToSuperview().inset(Sizes.smallMargin.value)
+            }
+            roundUpAmount.snp.remakeConstraints { make in
+                make.top.equalTo(roundUpSectionTitle.snp.bottom).offset(Sizes.smallMargin.value)
+                make.leading.equalToSuperview().offset(Sizes.mediumMargin.value)
+                make.trailing.equalToSuperview().inset(Sizes.smallMargin.value)
             }
             addToSavingsButton.snp.remakeConstraints { make in
                 make.top.equalTo(roundUpAmount.snp.bottom).offset(Sizes.mediumMargin.value)
@@ -128,11 +130,11 @@ class TransactionsViewController: UIViewController {
                 make.bottom.equalToSuperview().inset(Sizes.mediumMargin.value)
                 make.height.greaterThanOrEqualTo(Sizes.buttonHeight.value)
             }
-        }
-        tableView.snp.makeConstraints { make in
-            make.top.equalTo(roundUpContainer.snp.bottom).offset(Sizes.mediumMargin.value)
-            make.leading.trailing.equalToSuperview()
-            make.bottom.equalToSuperview()
+            tableView.snp.remakeConstraints { make in
+                make.top.equalTo(roundUpContainer.snp.bottom).offset(Sizes.mediumMargin.value)
+                make.leading.trailing.equalToSuperview()
+                make.bottom.equalToSuperview()
+            }
         }
         activityIndicator.snp.makeConstraints { make in
             make.center.equalToSuperview()
