@@ -98,9 +98,9 @@ class TransactionsViewModel {
         repository.getPrimaryAccount()
             .flatMap { account -> Single<[FeedItem]> in
                 self._screenTitle.accept("\(account.name) Account")
-                // TODO: Remove hardcoded date
                 self.accountID = account.accountUid
-                return self.repository.getTransactions(accountID: account.accountUid, categoryID: account.defaultCategory, sinceDate: "2023-08-18T11:37:14.893Z")
+                let date = Date().getLastWeekDate().formatToISO8601()
+                return self.repository.getTransactions(accountID: account.accountUid, categoryID: account.defaultCategory, sinceDate: date)
             }
             .subscribe { event in
                 switch event {
