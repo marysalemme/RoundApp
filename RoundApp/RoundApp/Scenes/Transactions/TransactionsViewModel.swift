@@ -48,6 +48,16 @@ class TransactionsViewModel {
         return _showLoading.asDriver()
     }
     
+    private let _showError = BehaviorRelay<Bool>(value: false)
+    var showError: Driver<Bool> {
+        return _showError.asDriver()
+    }
+    
+    private let _errorMessage = BehaviorRelay<String?>(value: nil)
+    var errorMessage: Driver<String?> {
+        return _errorMessage.asDriver()
+    }
+    
     // MARK: - Inputs
     
     func addToSavings() {
@@ -109,8 +119,8 @@ class TransactionsViewModel {
                     }
                     self._transactions.accept(transactions)
                 case .failure(let error):
-                    // TODO: Handle error
-                    print(error)
+                    self._showError.accept(true)
+                    self._errorMessage.accept(error.localizedDescription)
                 }
                 self._showLoading.accept(false)
             }

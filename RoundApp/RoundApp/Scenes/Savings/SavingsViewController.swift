@@ -199,6 +199,14 @@ class SavingsViewController: UIViewController {
             })
             .disposed(by: disposeBag)
         
+        Observable.combineLatest(viewModel.showError.asObservable(), viewModel.errorMessage.asObservable())
+            .subscribe { [weak self] showError, errorMessage in
+                if showError, let errorMessage = errorMessage {
+                    self?.showAlert(title: "Error", message: errorMessage)
+                }
+            }
+            .disposed(by: disposeBag)
+        
         // MARK: - Outputs
         
         createNewGoalButton.rx.tapGesture()
@@ -214,6 +222,13 @@ class SavingsViewController: UIViewController {
                 self?.viewModel.addRoundUpMoney()
             })
             .disposed(by: disposeBag)
+    }
+    
+    private func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let okAction  = UIAlertAction(title: "OK", style: .default)
+        alert.addAction(okAction)
+        present(alert, animated: true)
     }
 }
 

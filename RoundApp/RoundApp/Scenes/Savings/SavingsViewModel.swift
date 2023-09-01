@@ -63,6 +63,16 @@ class SavingsViewModel {
         return _showLoading.asDriver()
     }
     
+    private let _showError = BehaviorRelay<Bool>(value: false)
+    var showError: Driver<Bool> {
+        return _showError.asDriver()
+    }
+    
+    private let _errorMessage = BehaviorRelay<String?>(value: nil)
+    var errorMessage: Driver<String?> {
+        return _errorMessage.asDriver()
+    }
+    
     // MARK: - Inputs
     
     func createNewSavingsGoal() {
@@ -87,10 +97,8 @@ class SavingsViewModel {
                     self._showSavingsGoal.accept(true)
                     self._showEmptyView.accept(false)
                 case .failure(let error):
-                    // Handle error
-                    self._showSavingsGoal.accept(false)
-                    self._showEmptyView.accept(false)
-                    print(error)
+                    self._showError.accept(true)
+                    self._errorMessage.accept(error.localizedDescription)
                 }
                 self._showLoading.accept(false)
             }
@@ -114,12 +122,9 @@ class SavingsViewModel {
                     self.updateSavingsGoalBindings(for: savingsGoal)
                     self._roundUpAmount.accept(0)
                     self._showSavingsGoal.accept(true)
-                    self._showEmptyView.accept(false)
                 case .failure(let error):
-                    // Handle error
-                    self._showSavingsGoal.accept(false)
-                    self._showEmptyView.accept(false)
-                    print(error)
+                    self._showError.accept(true)
+                    self._errorMessage.accept(error.localizedDescription)
                 }
                 self._showLoading.accept(false)
             }
@@ -154,19 +159,15 @@ class SavingsViewModel {
                 case .success(let savingsGoals):
                     if savingsGoals.isEmpty {
                         self._showEmptyView.accept(true)
-                        self._showSavingsGoal.accept(false)
                     } else {
                         guard let savingsGoal = savingsGoals.first else { return }
                         self.updateSavingsGoalBindings(for: savingsGoal)
                         self.savingsGoalId = savingsGoal.savingsGoalUid
-                        self._showEmptyView.accept(false)
                         self._showSavingsGoal.accept(true)
                     }
                 case .failure(let error):
-                    // TODO: Handle error
-                    print(error)
-                    self._showSavingsGoal.accept(false)
-                    self._showEmptyView.accept(false)
+                    self._showError.accept(true)
+                    self._errorMessage.accept(error.localizedDescription)
                 }
                 self._showLoading.accept(false)
             }

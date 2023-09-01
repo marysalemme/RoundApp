@@ -176,6 +176,14 @@ class TransactionsViewController: UIViewController {
             })
             .disposed(by: disposeBag)
         
+        Observable.combineLatest(viewModel.showError.asObservable(), viewModel.errorMessage.asObservable())
+            .subscribe { [weak self] showError, errorMessage in
+                if showError, let errorMessage = errorMessage {
+                    self?.showAlert(title: "Error", message: errorMessage)
+                }
+            }
+            .disposed(by: disposeBag)
+        
         // MARK: - Outputs
         
         addToSavingsButton.rx.tapGesture()
@@ -192,5 +200,12 @@ class TransactionsViewController: UIViewController {
         } else {
             return "+ \(amount) \(currency.uppercased())"
         }
+    }
+    
+    private func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let okAction  = UIAlertAction(title: "OK", style: .default)
+        alert.addAction(okAction)
+        present(alert, animated: true)
     }
 }
