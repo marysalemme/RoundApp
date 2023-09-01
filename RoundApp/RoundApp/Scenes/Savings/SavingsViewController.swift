@@ -53,7 +53,6 @@ class SavingsViewController: UIViewController {
         self.savingsGoalTotalSaved = UILabel(frame: .zero)
         self.addMoneyButton = UIButton(frame: .zero)
         self.activityIndicator = UIActivityIndicatorView(style: .large)
-//        self.savingsGoalTarget = UIProgressView(progressViewStyle: .default)
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
         setupUI()
@@ -84,7 +83,7 @@ class SavingsViewController: UIViewController {
         createNewGoalButton.titleLabel?.font = .preferredFont(forTextStyle: .body)
         createNewGoalButton.setTitleColor(.systemGray, for: .normal)
         createNewGoalButton.backgroundColor = .systemBackground
-        createNewGoalButton.layer.cornerRadius = 20
+        createNewGoalButton.layer.cornerRadius = Sizes.cornerRadius.value
         noSavingGoalsView.addSubview(createNewGoalButton)
     
         view.addSubview(savingsGoalView)
@@ -100,7 +99,7 @@ class SavingsViewController: UIViewController {
         addMoneyButton.titleLabel?.font = .preferredFont(forTextStyle: .body)
         addMoneyButton.setTitleColor(.systemGray, for: .normal)
         addMoneyButton.backgroundColor = .systemBackground
-        addMoneyButton.layer.cornerRadius = 20
+        addMoneyButton.layer.cornerRadius = Sizes.cornerRadius.value
         savingsGoalView.addSubview(addMoneyButton)
         
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
@@ -110,41 +109,41 @@ class SavingsViewController: UIViewController {
     
     private func setupConstraints() {
         noSavingGoalsView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(10)
-            make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().inset(20)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(Sizes.smallMargin.value)
+            make.leading.equalToSuperview().offset(Sizes.mediumMargin.value)
+            make.trailing.equalToSuperview().inset(Sizes.mediumMargin.value)
         }
         noSavingGoalsText.snp.makeConstraints { make in
-            make.leading.top.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().inset(10)
+            make.leading.top.equalToSuperview().offset(Sizes.mediumMargin.value)
+            make.trailing.equalToSuperview().inset(Sizes.smallMargin.value)
         }
         createNewGoalButton.snp.makeConstraints { make in
-            make.top.equalTo(noSavingGoalsText.snp.bottom).offset(20)
-            make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().inset(20)
-            make.bottom.equalToSuperview().inset(20)
-            make.height.greaterThanOrEqualTo(50)
+            make.top.equalTo(noSavingGoalsText.snp.bottom).offset(Sizes.mediumMargin.value)
+            make.leading.equalToSuperview().offset(Sizes.mediumMargin.value)
+            make.trailing.equalToSuperview().inset(Sizes.mediumMargin.value)
+            make.bottom.equalToSuperview().inset(Sizes.mediumMargin.value)
+            make.height.greaterThanOrEqualTo(Sizes.buttonHeight.value)
         }
         savingsGoalView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(10)
-            make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().inset(20)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(Sizes.smallMargin.value)
+            make.leading.equalToSuperview().offset(Sizes.mediumMargin.value)
+            make.trailing.equalToSuperview().inset(Sizes.mediumMargin.value)
         }
         savingsGoalTitle.snp.makeConstraints { make in
-            make.leading.top.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().inset(10)
+            make.leading.top.equalToSuperview().offset(Sizes.mediumMargin.value)
+            make.trailing.equalToSuperview().inset(Sizes.smallMargin.value)
         }
         savingsGoalTotalSaved.snp.makeConstraints { make in
-            make.top.equalTo(savingsGoalTitle.snp.bottom).offset(20)
-            make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().inset(20)
+            make.top.equalTo(savingsGoalTitle.snp.bottom).offset(Sizes.mediumMargin.value)
+            make.leading.equalToSuperview().offset(Sizes.mediumMargin.value)
+            make.trailing.equalToSuperview().inset(Sizes.mediumMargin.value)
         }
         addMoneyButton.snp.makeConstraints { make in
-            make.top.equalTo(savingsGoalTotalSaved.snp.bottom).offset(20)
-            make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().inset(20)
-            make.bottom.equalToSuperview().inset(20)
-            make.height.greaterThanOrEqualTo(50)
+            make.top.equalTo(savingsGoalTotalSaved.snp.bottom).offset(Sizes.mediumMargin.value)
+            make.leading.equalToSuperview().offset(Sizes.mediumMargin.value)
+            make.trailing.equalToSuperview().inset(Sizes.mediumMargin.value)
+            make.bottom.equalToSuperview().inset(Sizes.mediumMargin.value)
+            make.height.greaterThanOrEqualTo(Sizes.buttonHeight.value)
         }
         activityIndicator.snp.makeConstraints { make in
             make.center.equalToSuperview()
