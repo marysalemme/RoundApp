@@ -28,7 +28,17 @@ final class SavingsViewModelTests: XCTestCase {
         XCTAssertEqual(try driver.toBlocking(timeout: 1).first(), "Saving Goals")
     }
     
-    func testEmptyView() {
+    func testLoadSavingGoals() {
+//        let loadingViewDriver = sut.showLoadingView.asObservable().subscribe(on: scheduler)
+        let textDriver = sut.savingsGoalTitle.asObservable().subscribe(on: scheduler)
+        let totalSavedDriver = sut.savingsGoalTotalSaved.asObservable().subscribe(on: scheduler)
+        sut.loadSavingGoals()
+//        XCTAssertEqual(try emptyViewDriver.toBlocking(timeout: 1).first(), false)
+        XCTAssertEqual(try textDriver.toBlocking(timeout: 1).first(), "Round Up")
+        XCTAssertEqual(try totalSavedDriver.toBlocking(timeout: 1).first(), "GBP 0/2000")
+    }
+    
+    func testLoadSavingGoalsWhenNoGoals() {
         mockRepository = MockStarlingRepositoryEmptyData()
         sut = SavingsViewModel(roundUpAmount: 12345, accountID: "asdhas-asdhaskd-asjdgajsd", repository: mockRepository)
         sut.loadSavingGoals()
@@ -51,6 +61,13 @@ final class SavingsViewModelTests: XCTestCase {
         sut.createNewSavingsGoal()
         XCTAssertEqual(try emptyViewDriver.toBlocking(timeout: 1).first(), false)
         XCTAssertEqual(try textDriver.toBlocking(timeout: 1).first(), "Round Up")
-        XCTAssertEqual(try totalSavedDriver.toBlocking(timeout: 1).first(), "0/2000")
+        XCTAssertEqual(try totalSavedDriver.toBlocking(timeout: 1).first(), "GBP 0/2000")
+    }
+    
+    func testAddMoneyToSavingGoal() {
+        sut.loadSavingGoals()
+        let textDriver = sut.savingsGoalTotalSaved.asObservable().subscribe(on: scheduler)
+        sut.addRoundUpMoney()
+        XCTAssertEqual(try textDriver.toBlocking(timeout: 1).first(), "GBP 120/2000")
     }
 }

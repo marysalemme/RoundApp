@@ -46,7 +46,7 @@ class MockStarlingRepository: StarlingRepositoryType {
                                  name: "Round Up",
                                  currency: nil,
                                  target: Target(currency: "GBP", minorUnits: 200000),
-                                 totalSaved: nil,
+                                 totalSaved: Target(currency: "GBP", minorUnits: 12000),
                                  savedPercentage: nil,
                                  state: "ACTIVE"))
     }
