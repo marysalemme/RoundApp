@@ -81,7 +81,7 @@ class SavingsViewModel {
         let goal = SavingsGoal(savingsGoalUid: nil,
                                name: "Round Up",
                                currency: "GBP",
-                               target: Target(currency: "GBP", minorUnits: 200000),
+                               target: Target(currency: .gbp, minorUnits: 200000),
                                totalSaved: nil,
                                savedPercentage: nil,
                                state: nil)
@@ -111,7 +111,7 @@ class SavingsViewModel {
             assertionFailure("Attempted to add money to saving goal without a saving goal ID")
             return
         }
-        let transferRequest = SavingsGoalTransferRequest(amount: Amount(currency: "GBP", minorUnits: _roundUpAmount.value))
+        let transferRequest = SavingsGoalTransferRequest(amount: Amount(currency: .gbp, minorUnits: _roundUpAmount.value))
         repository.addMoneyToSavingGoal(accountID: accountID, savingsGoalID: savingsGoalId, transferRequest: transferRequest)
             .flatMap { _ -> Single<SavingsGoal> in
                 return self.repository.getSavingsGoal(accountID: self.accountID, savingsGoalID: savingsGoalId)
@@ -176,6 +176,6 @@ class SavingsViewModel {
     
     private func updateSavingsGoalBindings(for goal: SavingsGoal) {
         _savingsGoalTitle.accept(goal.name)
-        _savingsGoalTotalSaved.accept("\(goal.target.currency) \(goal.totalSaved?.minorUnits.toDecimal() ?? 0.0)/\(goal.target.minorUnits.toDecimal())")
+        _savingsGoalTotalSaved.accept("\(goal.target.currency.symbol)\(goal.totalSaved?.minorUnits.toDecimal() ?? 0.0)/\(goal.target.currency.symbol)\(goal.target.minorUnits.toDecimal())")
     }
 }

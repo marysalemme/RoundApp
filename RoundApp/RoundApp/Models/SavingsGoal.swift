@@ -22,7 +22,7 @@ struct SavingsGoal: Codable {
 }
 
 struct Target: Codable {
-    let currency: String
+    let currency: Currency
     let minorUnits: Int
 }
 

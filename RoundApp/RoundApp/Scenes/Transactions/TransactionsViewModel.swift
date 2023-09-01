@@ -111,7 +111,7 @@ class TransactionsViewModel {
                     } else {
                         self.roundUpAmount = self.calculateRoundUpAmount(transactions: transactions)
                         if let roundUpAmount = self.roundUpAmount, roundUpAmount != 0.00 {
-                            self._totalRoundUpAmount.accept("\(roundUpAmount) GBP")
+                            self._totalRoundUpAmount.accept("£\(roundUpAmount)")
                             self._showRoundUpSection.accept(true)
                         } else {
                             self._showRoundUpSection.accept(false)

@@ -23,11 +23,11 @@ class MockStarlingRepository: StarlingRepositoryType {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
         return .just([
-            FeedItem(feedItemUid: "123", categoryUid: "123123", amount: Amount(currency: "GBP", minorUnits: 2300), direction: "OUT", transactionTime:  dateFormatter.date(from: "2023-08-19T12:37:14.893Z")!), // round up amount: 0
-            FeedItem(feedItemUid: "123", categoryUid: "123123", amount: Amount(currency: "GBP", minorUnits: 3425), direction: "OUT", transactionTime:  dateFormatter.date(from: "2023-08-19T12:37:14.893Z")!), // round up amount: 0.75
-            FeedItem(feedItemUid: "123", categoryUid: "123123", amount: Amount(currency: "GBP", minorUnits: 123), direction: "OUT", transactionTime:  dateFormatter.date(from: "2023-08-19T12:37:14.893Z")!), // round up amount: 0.77
-            FeedItem(feedItemUid: "123", categoryUid: "123123", amount: Amount(currency: "GBP", minorUnits: 56080), direction: "OUT", transactionTime:  dateFormatter.date(from: "2023-08-19T12:37:14.893Z")!), // round up amount: 0.2
-            FeedItem(feedItemUid: "123", categoryUid: "123123", amount: Amount(currency: "GBP", minorUnits: 450500), direction: "IN", transactionTime:  dateFormatter.date(from: "2023-08-19T12:37:14.893Z")!)
+            FeedItem(feedItemUid: "123", categoryUid: "123123", amount: Amount(currency: .gbp, minorUnits: 2300), direction: "OUT", transactionTime:  dateFormatter.date(from: "2023-08-19T12:37:14.893Z")!), // round up amount: 0
+            FeedItem(feedItemUid: "123", categoryUid: "123123", amount: Amount(currency: .gbp, minorUnits: 3425), direction: "OUT", transactionTime:  dateFormatter.date(from: "2023-08-19T12:37:14.893Z")!), // round up amount: 0.75
+            FeedItem(feedItemUid: "123", categoryUid: "123123", amount: Amount(currency: .gbp, minorUnits: 123), direction: "OUT", transactionTime:  dateFormatter.date(from: "2023-08-19T12:37:14.893Z")!), // round up amount: 0.77
+            FeedItem(feedItemUid: "123", categoryUid: "123123", amount: Amount(currency: .gbp, minorUnits: 56080), direction: "OUT", transactionTime:  dateFormatter.date(from: "2023-08-19T12:37:14.893Z")!), // round up amount: 0.2
+            FeedItem(feedItemUid: "123", categoryUid: "123123", amount: Amount(currency: .gbp, minorUnits: 450500), direction: "IN", transactionTime:  dateFormatter.date(from: "2023-08-19T12:37:14.893Z")!)
         ])
     }
     
@@ -35,7 +35,7 @@ class MockStarlingRepository: StarlingRepositoryType {
         return .just([SavingsGoal(savingsGoalUid: "123",
                                   name: "Round Up",
                                   currency: nil,
-                                  target: Target(currency: "GBP", minorUnits: 200000),
+                                  target: Target(currency: .gbp, minorUnits: 200000),
                                   totalSaved: nil,
                                   savedPercentage: nil,
                                   state: "ACTIVE")])
@@ -45,8 +45,8 @@ class MockStarlingRepository: StarlingRepositoryType {
         return .just(SavingsGoal(savingsGoalUid: "123",
                                  name: "Round Up",
                                  currency: nil,
-                                 target: Target(currency: "GBP", minorUnits: 200000),
-                                 totalSaved: Target(currency: "GBP", minorUnits: 12000),
+                                 target: Target(currency: .gbp, minorUnits: 200000),
+                                 totalSaved: Target(currency: .gbp, minorUnits: 12000),
                                  savedPercentage: nil,
                                  state: "ACTIVE"))
     }
@@ -75,7 +75,7 @@ class MockStarlingRepositoryEmptyData: MockStarlingRepository {
         return .just(SavingsGoal(savingsGoalUid: "123",
                                  name: "Round Up",
                                  currency: nil,
-                                 target: Target(currency: "GBP", minorUnits: 200000),
+                                 target: Target(currency: .gbp, minorUnits: 200000),
                                  totalSaved: nil,
                                  savedPercentage: nil,
                                  state: "ACTIVE"))
@@ -86,7 +86,11 @@ class MockStarlingRepositoryZeroRoundUp: MockStarlingRepository {
     override func getTransactions(accountID: String, categoryID: String, sinceDate: String) -> Single<[FeedItem]> {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-        return .just([FeedItem(feedItemUid: "123", categoryUid: "123123", amount: Amount(currency: "GBP", minorUnits: 2300), direction: "OUT", transactionTime:  dateFormatter.date(from: "2023-08-19T12:37:14.893Z")!)])
+        return .just([FeedItem(feedItemUid: "123",
+                               categoryUid: "123123",
+                               amount: Amount(currency: .gbp, minorUnits: 2300),
+                               direction: "OUT",
+                               transactionTime:  dateFormatter.date(from: "2023-08-19T12:37:14.893Z")!)])
     }
 }
 

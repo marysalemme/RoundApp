@@ -35,7 +35,7 @@ final class SavingsViewModelTests: XCTestCase {
         sut.loadSavingGoals()
         XCTAssertFalse(try emptyViewDriver.toBlocking(timeout: 1).first()!)
         XCTAssertEqual(try textDriver.toBlocking(timeout: 1).first(), "Round Up")
-        XCTAssertEqual(try totalSavedDriver.toBlocking(timeout: 1).first(), "GBP 0/2000")
+        XCTAssertEqual(try totalSavedDriver.toBlocking(timeout: 1).first(), "£0/£2000")
     }
     
     func testErrorWhenLoadingSavingsGoals() {
@@ -69,7 +69,7 @@ final class SavingsViewModelTests: XCTestCase {
         sut.createNewSavingsGoal()
         XCTAssertFalse(try emptyViewDriver.toBlocking(timeout: 1).first()!)
         XCTAssertEqual(try textDriver.toBlocking(timeout: 1).first(), "Round Up")
-        XCTAssertEqual(try totalSavedDriver.toBlocking(timeout: 1).first(), "GBP 0/2000")
+        XCTAssertEqual(try totalSavedDriver.toBlocking(timeout: 1).first(), "£0/£2000")
     }
     
     func testErrorWhenCreatingSavingsGoal() {
@@ -84,7 +84,7 @@ final class SavingsViewModelTests: XCTestCase {
         sut.loadSavingGoals()
         let textDriver = sut.savingsGoalTotalSaved.asObservable().subscribe(on: scheduler)
         sut.addRoundUpMoney()
-        XCTAssertEqual(try textDriver.toBlocking(timeout: 1).first(), "GBP 120/2000")
+        XCTAssertEqual(try textDriver.toBlocking(timeout: 1).first(), "£120/£2000")
     }
     
     func testErrorWhenAddingMoneyToSavingsGoal() {
@@ -93,6 +93,6 @@ final class SavingsViewModelTests: XCTestCase {
         sut.loadSavingGoals()
         sut.addRoundUpMoney()
         let driver = sut.errorMessage.asObservable().subscribe(on: scheduler)
-        XCTAssertEqual(try driver.toBlocking(timeout: 1).first(), "Invalid date")
+        XCTAssertEqual(try driver.toBlocking(timeout: 1).first(), "Invalid data")
     }
 }

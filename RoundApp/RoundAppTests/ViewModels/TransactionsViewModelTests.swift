@@ -57,7 +57,7 @@ final class TransactionsViewModelTests: XCTestCase {
         let roundUpAmountDriver = sut.totalRoundUpAmount.asObservable().subscribe(on: scheduler)
         let showRoundUpSection = sut.showRoundUpSection.asObservable().subscribe(on: scheduler)
         XCTAssertTrue(try showRoundUpSection.toBlocking(timeout: 1).first()!)
-        XCTAssertEqual(try roundUpAmountDriver.toBlocking(timeout: 1).first(), "1.72 GBP")
+        XCTAssertEqual(try roundUpAmountDriver.toBlocking(timeout: 1).first(), "£1.72")
     }
     
     func testRoundUpSectionWhenRoundUpAmountIsZero() {

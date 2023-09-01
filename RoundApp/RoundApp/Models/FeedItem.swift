@@ -7,12 +7,10 @@
 
 import Foundation
 
-// MARK: - Transaction response
 struct TransactionResponse: Codable {
     let feedItems: [FeedItem]
 }
 
-// MARK: - FeedItem
 struct FeedItem: Codable {
     let feedItemUid: String
     let categoryUid: String
@@ -21,10 +19,26 @@ struct FeedItem: Codable {
     let transactionTime: Date
 }
 
-// MARK: - Amount
 struct Amount: Codable {
-    let currency: String
+    let currency: Currency
     let minorUnits: Int
+}
+
+enum Currency: String, Codable {
+    case gbp = "GBP"
+    case eur = "EUR"
+    case usd = "USD"
+    
+    var symbol: String {
+        switch self {
+        case .gbp:
+            return "£"
+        case .eur:
+            return "€"
+        case .usd:
+            return "$"
+        }
+    }
 }
 
 extension FeedItem {

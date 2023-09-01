@@ -165,7 +165,7 @@ class TransactionsViewController: UIViewController {
         
         viewModel.transactions
             .drive(tableView.rx.items(cellIdentifier: TransactionCell.reuseIdentifier, cellType: TransactionCell.self)) { [weak self] _, transaction, cell in
-                cell.amount = self?.composeTransactionString(amount: transaction.amount.minorUnits.toDecimal(), currency: transaction.amount.currency, direction: transaction.direction)
+                cell.amount = self?.composeTransactionString(amount: transaction.amount.minorUnits.toDecimal(), currency: transaction.amount.currency.symbol, direction: transaction.direction)
                 cell.date = transaction.transactionTime.formatToString()
             }
             .disposed(by: disposeBag)
@@ -196,9 +196,9 @@ class TransactionsViewController: UIViewController {
     
     private func composeTransactionString(amount: Decimal, currency: String, direction: String) -> String {
         if direction == "OUT" {
-            return "- \(amount) \(currency.uppercased())"
+            return "- \(currency)\(amount)"
         } else {
-            return "+ \(amount) \(currency.uppercased())"
+            return "+ \(currency)\(amount)"
         }
     }
     
