@@ -26,6 +26,8 @@ class TransactionsViewController: UIViewController {
     
     let tableView: UITableView
     
+    let noTransactionsLabel: UILabel
+    
     var activityIndicator: UIActivityIndicatorView
     
     // MARK: - Properties
@@ -43,6 +45,7 @@ class TransactionsViewController: UIViewController {
         self.roundUpAmount = UILabel(frame: .zero)
         self.addToSavingsButton = UIButton(frame: .zero)
         self.tableView = UITableView(frame: .zero)
+        self.noTransactionsLabel = UILabel(frame: .zero)
         self.activityIndicator = UIActivityIndicatorView(style: .large)
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -160,6 +163,22 @@ class TransactionsViewController: UIViewController {
             .drive(onNext: { [weak self] showButton in
                 self?.roundUpContainer.isHidden = !showButton
                 self?.setupConstraints()
+            })
+            .disposed(by: disposeBag)
+        
+        viewModel.noTransactionsText
+            .drive(noTransactionsLabel.rx.text)
+            .disposed(by: disposeBag)
+        
+        viewModel.showNoTransactionsView
+            .drive(onNext: { [weak self] showNoTransactionsView in
+                if showNoTransactionsView {
+                    self?.tableView.backgroundView = self?.noTransactionsLabel
+                    self?.noTransactionsLabel.snp.makeConstraints { make in
+                        make.centerX.equalToSuperview()
+                        make.top.equalToSuperview()
+                    }
+                }
             })
             .disposed(by: disposeBag)
         

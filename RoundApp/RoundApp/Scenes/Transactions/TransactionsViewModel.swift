@@ -38,6 +38,16 @@ class TransactionsViewModel {
         return _showRoundUpSection.asDriver()
     }
     
+    private let _noTransactionsText = BehaviorRelay<String>(value: "You have no transactions")
+    var noTransactionsText: Driver<String> {
+        return _noTransactionsText.asDriver()
+    }
+    
+    private let _showNoTransactionsView = BehaviorRelay<Bool>(value: false)
+    var showNoTransactionsView: Driver<Bool> {
+        return _showNoTransactionsView.asDriver()
+    }
+    
     private let _transactions = BehaviorRelay<[FeedItem]>(value: [])
     var transactions: Driver<[FeedItem]> {
         return _transactions.asDriver()
@@ -106,8 +116,7 @@ class TransactionsViewModel {
                 switch event {
                 case .success(let transactions):
                     if transactions.isEmpty {
-                        self._showRoundUpSection.accept(false)
-                        // TODO: Show empty state
+                        self._showNoTransactionsView.accept(true)
                     } else {
                         self.roundUpAmount = self.calculateRoundUpAmount(transactions: transactions)
                         if let roundUpAmount = self.roundUpAmount, roundUpAmount != 0.00 {
