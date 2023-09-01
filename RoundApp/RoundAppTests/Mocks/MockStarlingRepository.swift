@@ -12,7 +12,7 @@ import RxSwift
 class MockStarlingRepository: StarlingRepositoryType {
     
     func getPrimaryAccount() -> Single<Account> {
-        return Single.just(Account(accountUid: "123",
+        return .just(Account(accountUid: "123",
                                    accountType: "PRIMARY",
                                    defaultCategory: "123123",
                                    currency: "GBP",
@@ -22,7 +22,7 @@ class MockStarlingRepository: StarlingRepositoryType {
     func getTransactions(accountID: String, categoryID: String, sinceDate: String) -> Single<[FeedItem]> {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-        return Single.just([
+        return .just([
             FeedItem(feedItemUid: "123", categoryUid: "123123", amount: Amount(currency: "GBP", minorUnits: 2300), direction: "OUT", transactionTime:  dateFormatter.date(from: "2023-08-19T12:37:14.893Z")!), // round up amount: 0
             FeedItem(feedItemUid: "123", categoryUid: "123123", amount: Amount(currency: "GBP", minorUnits: 3425), direction: "OUT", transactionTime:  dateFormatter.date(from: "2023-08-19T12:37:14.893Z")!), // round up amount: 0.75
             FeedItem(feedItemUid: "123", categoryUid: "123123", amount: Amount(currency: "GBP", minorUnits: 123), direction: "OUT", transactionTime:  dateFormatter.date(from: "2023-08-19T12:37:14.893Z")!), // round up amount: 0.77
@@ -57,18 +57,28 @@ class MockStarlingRepository: StarlingRepositoryType {
     
     func addMoneyToSavingGoal(accountID: String,
                               savingsGoalID: String,
-                              transferRequest: RoundApp.SavingsGoalTransferRequest) -> RxSwift.Single<RoundApp.SavingsGoalTransfer> {
+                              transferRequest: SavingsGoalTransferRequest) -> Single<SavingsGoalTransfer> {
         return .just(SavingsGoalTransfer(transferUid: "123", success: true))
     }
 }
 
 class MockStarlingRepositoryEmptyData: MockStarlingRepository {
     override func getTransactions(accountID: String, categoryID: String, sinceDate: String) -> Single<[FeedItem]> {
-        return Single.just([])
+        return .just([])
     }
     
     override func getSavingsGoals(accountID: String) -> Single<[SavingsGoal]> {
         return .just([])
+    }
+    
+    override func getSavingsGoal(accountID: String, savingsGoalID: String) -> Single<SavingsGoal> {
+        return .just(SavingsGoal(savingsGoalUid: "123",
+                                 name: "Round Up",
+                                 currency: nil,
+                                 target: Target(currency: "GBP", minorUnits: 200000),
+                                 totalSaved: nil,
+                                 savedPercentage: nil,
+                                 state: "ACTIVE"))
     }
 }
 
@@ -76,6 +86,45 @@ class MockStarlingRepositoryZeroRoundUp: MockStarlingRepository {
     override func getTransactions(accountID: String, categoryID: String, sinceDate: String) -> Single<[FeedItem]> {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-        return Single.just([FeedItem(feedItemUid: "123", categoryUid: "123123", amount: Amount(currency: "GBP", minorUnits: 2300), direction: "OUT", transactionTime:  dateFormatter.date(from: "2023-08-19T12:37:14.893Z")!)])
+        return .just([FeedItem(feedItemUid: "123", categoryUid: "123123", amount: Amount(currency: "GBP", minorUnits: 2300), direction: "OUT", transactionTime:  dateFormatter.date(from: "2023-08-19T12:37:14.893Z")!)])
     }
 }
+
+class MockStarlingRepositoryAccountError: MockStarlingRepository {
+    override func getPrimaryAccount() -> Single<Account> {
+        return .error(RoundAppError.primaryAccountNotFound)
+    }
+}
+
+class MockStarlingRepositoryTransactionsError: MockStarlingRepository {
+    override func getTransactions(accountID: String, categoryID: String, sinceDate: String) -> Single<[FeedItem]> {
+        return .error(RoundAppError.invalidResponse)
+    }
+}
+
+class MockStarlingRepositoryGetSavingsGoalsError: MockStarlingRepository {
+    override func getSavingsGoals(accountID: String) -> Single<[SavingsGoal]> {
+        return .error(RoundAppError.invalidURL)
+    }
+}
+
+class MockStarlingRepositoryGetSavingsGoalError: MockStarlingRepository {
+    override func getSavingsGoal(accountID: String, savingsGoalID: String) -> Single<SavingsGoal> {
+        return .error(RoundAppError.missingURL)
+    }
+}
+
+class MockStarlingRepositoryCreateSavingsGoalError: MockStarlingRepository {
+    override func createSavingGoal(accountID: String, goal: SavingsGoal) -> Single<SavingsGoalCreated> {
+        return .error(RoundAppError.invalidBody)
+    }
+}
+
+class MockStarlingRepositoryAddMoneyToSavingsGoalError: MockStarlingRepository {
+    override func addMoneyToSavingGoal(accountID: String,
+                              savingsGoalID: String,
+                              transferRequest: SavingsGoalTransferRequest) -> Single<SavingsGoalTransfer> {
+        return .error(RoundAppError.invalidData)
+    }
+}
+

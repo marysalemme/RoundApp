@@ -36,11 +36,27 @@ final class TransactionsViewModelTests: XCTestCase {
         XCTAssertEqual(try driver.toBlocking(timeout: 1).first()?.first?.amount.minorUnits, 2300)
     }
     
+    func testErrorWhenGettingAccount() {
+        mockRepository = MockStarlingRepositoryAccountError()
+        sut = TransactionsViewModel(repository: mockRepository)
+        sut.loadAccountTransactions()
+        let driver = sut.errorMessage.asObservable().subscribe(on: scheduler)
+        XCTAssertEqual(try driver.toBlocking(timeout: 1).first(), "Primary account not found")
+    }
+    
+    func testErrorWhenGettingTransactions() {
+        mockRepository = MockStarlingRepositoryTransactionsError()
+        sut = TransactionsViewModel(repository: mockRepository)
+        sut.loadAccountTransactions()
+        let driver = sut.errorMessage.asObservable().subscribe(on: scheduler)
+        XCTAssertEqual(try driver.toBlocking(timeout: 1).first(), "Invalid response")
+    }
+    
     func testRoundUpSectionWhenRoundUpAmountExists() {
         sut.loadAccountTransactions()
         let roundUpAmountDriver = sut.totalRoundUpAmount.asObservable().subscribe(on: scheduler)
         let showRoundUpSection = sut.showRoundUpSection.asObservable().subscribe(on: scheduler)
-        XCTAssertEqual(try showRoundUpSection.toBlocking(timeout: 1).first(), true)
+        XCTAssertTrue(try showRoundUpSection.toBlocking(timeout: 1).first()!)
         XCTAssertEqual(try roundUpAmountDriver.toBlocking(timeout: 1).first(), "1.72 GBP")
     }
     
@@ -50,7 +66,7 @@ final class TransactionsViewModelTests: XCTestCase {
         sut.loadAccountTransactions()
         let roundUpAmountDriver = sut.totalRoundUpAmount.asObservable().subscribe(on: scheduler)
         let showRoundUpSection = sut.showRoundUpSection.asObservable().subscribe(on: scheduler)
-        XCTAssertEqual(try showRoundUpSection.toBlocking(timeout: 1).first(), false)
+        XCTAssertFalse(try showRoundUpSection.toBlocking(timeout: 1).first()!)
         XCTAssertNil(try roundUpAmountDriver.toBlocking(timeout: 1).first()!)
     }
     
@@ -60,7 +76,7 @@ final class TransactionsViewModelTests: XCTestCase {
         sut.loadAccountTransactions()
         let roundUpAmountDriver = sut.totalRoundUpAmount.asObservable().subscribe(on: scheduler)
         let showRoundUpSection = sut.showRoundUpSection.asObservable().subscribe(on: scheduler)
-        XCTAssertEqual(try showRoundUpSection.toBlocking(timeout: 1).first(), false)
+        XCTAssertFalse(try showRoundUpSection.toBlocking(timeout: 1).first()!)
         XCTAssertNil(try roundUpAmountDriver.toBlocking(timeout: 1).first()!)
     }
     

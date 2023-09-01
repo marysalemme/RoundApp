@@ -29,13 +29,21 @@ final class SavingsViewModelTests: XCTestCase {
     }
     
     func testLoadSavingGoals() {
-//        let loadingViewDriver = sut.showLoadingView.asObservable().subscribe(on: scheduler)
         let textDriver = sut.savingsGoalTitle.asObservable().subscribe(on: scheduler)
         let totalSavedDriver = sut.savingsGoalTotalSaved.asObservable().subscribe(on: scheduler)
+        let emptyViewDriver = sut.showEmptyView.asObservable().subscribe(on: scheduler)
         sut.loadSavingGoals()
-//        XCTAssertEqual(try emptyViewDriver.toBlocking(timeout: 1).first(), false)
+        XCTAssertFalse(try emptyViewDriver.toBlocking(timeout: 1).first()!)
         XCTAssertEqual(try textDriver.toBlocking(timeout: 1).first(), "Round Up")
         XCTAssertEqual(try totalSavedDriver.toBlocking(timeout: 1).first(), "GBP 0/2000")
+    }
+    
+    func testErrorWhenLoadingSavingsGoals() {
+        mockRepository = MockStarlingRepositoryGetSavingsGoalsError()
+        sut = SavingsViewModel(roundUpAmount: 12345, accountID: "asdhas-asdhaskd-asjdgajsd", repository: mockRepository)
+        sut.loadSavingGoals()
+        let driver = sut.errorMessage.asObservable().subscribe(on: scheduler)
+        XCTAssertEqual(try driver.toBlocking(timeout: 1).first(), "Invalid URL")
     }
     
     func testLoadSavingGoalsWhenNoGoals() {
@@ -45,7 +53,7 @@ final class SavingsViewModelTests: XCTestCase {
         let emptyViewDriver = sut.showEmptyView.asObservable().subscribe(on: scheduler)
         let textDriver = sut.emptyViewText.asObservable().subscribe(on: scheduler)
         let buttonTextDriver = sut.emptyViewButtonTitle.asObservable().subscribe(on: scheduler)
-        XCTAssertEqual(try emptyViewDriver.toBlocking(timeout: 1).first(), true)
+        XCTAssertTrue(try emptyViewDriver.toBlocking(timeout: 1).first()!)
         XCTAssertEqual(try textDriver.toBlocking(timeout: 1).first(), "You have no saving goals")
         XCTAssertEqual(try buttonTextDriver.toBlocking(timeout: 1).first(), "Create a new saving goal")
     }
@@ -57,11 +65,19 @@ final class SavingsViewModelTests: XCTestCase {
         let emptyViewDriver = sut.showEmptyView.asObservable().subscribe(on: scheduler)
         let textDriver = sut.savingsGoalTitle.asObservable().subscribe(on: scheduler)
         let totalSavedDriver = sut.savingsGoalTotalSaved.asObservable().subscribe(on: scheduler)
-        XCTAssertEqual(try emptyViewDriver.toBlocking(timeout: 1).first(), true)
+        XCTAssertTrue(try emptyViewDriver.toBlocking(timeout: 1).first()!)
         sut.createNewSavingsGoal()
-        XCTAssertEqual(try emptyViewDriver.toBlocking(timeout: 1).first(), false)
+        XCTAssertFalse(try emptyViewDriver.toBlocking(timeout: 1).first()!)
         XCTAssertEqual(try textDriver.toBlocking(timeout: 1).first(), "Round Up")
         XCTAssertEqual(try totalSavedDriver.toBlocking(timeout: 1).first(), "GBP 0/2000")
+    }
+    
+    func testErrorWhenCreatingSavingsGoal() {
+        mockRepository = MockStarlingRepositoryCreateSavingsGoalError()
+        sut = SavingsViewModel(roundUpAmount: 12345, accountID: "asdhas-asdhaskd-asjdgajsd", repository: mockRepository)
+        sut.createNewSavingsGoal()
+        let driver = sut.errorMessage.asObservable().subscribe(on: scheduler)
+        XCTAssertEqual(try driver.toBlocking(timeout: 1).first(), "Invalid body")
     }
     
     func testAddMoneyToSavingGoal() {
@@ -69,5 +85,14 @@ final class SavingsViewModelTests: XCTestCase {
         let textDriver = sut.savingsGoalTotalSaved.asObservable().subscribe(on: scheduler)
         sut.addRoundUpMoney()
         XCTAssertEqual(try textDriver.toBlocking(timeout: 1).first(), "GBP 120/2000")
+    }
+    
+    func testErrorWhenAddingMoneyToSavingsGoal() {
+        mockRepository = MockStarlingRepositoryAddMoneyToSavingsGoalError()
+        sut = SavingsViewModel(roundUpAmount: 12345, accountID: "asdhas-asdhaskd-asjdgajsd", repository: mockRepository)
+        sut.loadSavingGoals()
+        sut.addRoundUpMoney()
+        let driver = sut.errorMessage.asObservable().subscribe(on: scheduler)
+        XCTAssertEqual(try driver.toBlocking(timeout: 1).first(), "Invalid date")
     }
 }

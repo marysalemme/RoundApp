@@ -14,4 +14,10 @@ final class DecimalExtensionsTests: XCTestCase {
         let expected = Decimal(2)
         XCTAssertEqual(decimal.roundedUp(), expected)
     }
+    
+    func testToInt() {
+        let decimal = Decimal(123.15)
+        let expected = 12315
+        XCTAssertEqual(decimal.toInt(), expected)
+    }
 }
