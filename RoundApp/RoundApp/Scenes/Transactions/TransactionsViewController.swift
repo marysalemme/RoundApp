@@ -26,6 +26,8 @@ class TransactionsViewController: UIViewController {
     
     let tableView: UITableView
     
+    var activityIndicator: UIActivityIndicatorView
+    
     // MARK: - Properties
     
     var viewModel: TransactionsViewModel
@@ -39,6 +41,7 @@ class TransactionsViewController: UIViewController {
         self.roundUpAmount = UILabel(frame: .zero)
         self.addToSavingsButton = UIButton(frame: .zero)
         self.tableView = UITableView(frame: .zero)
+        self.activityIndicator = UIActivityIndicatorView(style: .large)
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
         setupUI()
@@ -54,7 +57,7 @@ class TransactionsViewController: UIViewController {
         super.viewDidLoad()
         viewModel.loadAccountTransactions()
     }
-    
+
     private func setupUI() {
         navigationController?.navigationBar.isTranslucent = false
         view.backgroundColor = .systemGray6
@@ -81,6 +84,10 @@ class TransactionsViewController: UIViewController {
         tableView.showsVerticalScrollIndicator = false
         tableView.estimatedRowHeight = 120
         view.addSubview(tableView)
+        
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicator.hidesWhenStopped = true
+        view.addSubview(activityIndicator)
     }
     
     private func setupConstraints() {
@@ -120,9 +127,15 @@ class TransactionsViewController: UIViewController {
             make.leading.trailing.equalToSuperview()
             make.bottom.equalToSuperview()
         }
+        activityIndicator.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+        }
     }
     
     private func setupBindings() {
+        
+        // MARK: - Inputs
+        
         viewModel.screenTitle
             .drive(navigationItem.rx.title)
             .disposed(by: disposeBag)
@@ -139,12 +152,27 @@ class TransactionsViewController: UIViewController {
             .drive(addToSavingsButton.rx.title())
             .disposed(by: disposeBag)
         
-        viewModel.showAddToSavingsButton
+        viewModel.showRoundUpSection
             .drive(onNext: { [weak self] showButton in
-                self?.addToSavingsButton.isHidden = !showButton
+                self?.roundUpContainer.isHidden = !showButton
                 self?.setupConstraints()
             })
             .disposed(by: disposeBag)
+        
+        viewModel.transactions
+            .drive(tableView.rx.items(cellIdentifier: TransactionCell.reuseIdentifier, cellType: TransactionCell.self)) { [weak self] _, transaction, cell in
+                cell.amount = self?.composeTransactionString(amount: transaction.amount.minorUnits.toDecimal(), currency: transaction.amount.currency, direction: transaction.direction)
+                cell.date = transaction.transactionTime.formatToString()
+            }
+            .disposed(by: disposeBag)
+        
+        viewModel.showLoading
+            .drive(onNext: { [weak self] showLoading in
+                showLoading ? self?.activityIndicator.startAnimating() : self?.activityIndicator.stopAnimating()
+            })
+            .disposed(by: disposeBag)
+        
+        // MARK: - Outputs
         
         addToSavingsButton.rx.tapGesture()
             .when(.recognized)
@@ -152,12 +180,6 @@ class TransactionsViewController: UIViewController {
                 self?.viewModel.addToSavings()
             })
             .disposed(by: disposeBag)
-        
-        viewModel.transactions.drive(tableView.rx.items(cellIdentifier: TransactionCell.reuseIdentifier, cellType: TransactionCell.self)) { [weak self] _, transaction, cell in
-            cell.amount = self?.composeTransactionString(amount: transaction.amount.minorUnits.toDecimal(), currency: transaction.amount.currency, direction: transaction.direction)
-            cell.date = transaction.transactionTime.formatToString()
-        }
-        .disposed(by: disposeBag)
     }
     
     private func composeTransactionString(amount: Decimal, currency: String, direction: String) -> String {

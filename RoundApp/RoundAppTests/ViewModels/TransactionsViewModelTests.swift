@@ -36,38 +36,32 @@ final class TransactionsViewModelTests: XCTestCase {
         XCTAssertEqual(try driver.toBlocking(timeout: 1).first()?.first?.amount.minorUnits, 2300)
     }
     
-    func testRoundUpSectionTitle() {
-        sut.loadAccountTransactions()
-        let driver = sut.roundUpSectionTitle.asObservable().subscribe(on: scheduler)
-        XCTAssertEqual(try driver.toBlocking(timeout: 1).first(), "Weekly Round Up Amount")
-    }
-    
-    func testTotalRoundUpAmount() {
+    func testRoundUpSectionWhenRoundUpAmountExists() {
         sut.loadAccountTransactions()
         let roundUpAmountDriver = sut.totalRoundUpAmount.asObservable().subscribe(on: scheduler)
-        let showAddToSavingsButtonDriver = sut.showAddToSavingsButton.asObservable().subscribe(on: scheduler)
+        let showRoundUpSection = sut.showRoundUpSection.asObservable().subscribe(on: scheduler)
+        XCTAssertEqual(try showRoundUpSection.toBlocking(timeout: 1).first(), true)
         XCTAssertEqual(try roundUpAmountDriver.toBlocking(timeout: 1).first(), "1.72 GBP")
-        XCTAssertEqual(try showAddToSavingsButtonDriver.toBlocking(timeout: 1).first(), true)
     }
     
-    func testTotalRoundUpAmountWhenNoTransactions() {
-        mockRepository = MockStarlingRepositoryEmptyData()
-        sut = TransactionsViewModel(repository: mockRepository)
-        sut.loadAccountTransactions()
-        let roundUpAmountDriver = sut.totalRoundUpAmount.asObservable().subscribe(on: scheduler)
-        let showAddToSavingsButtonDriver = sut.showAddToSavingsButton.asObservable().subscribe(on: scheduler)
-        XCTAssertEqual(try roundUpAmountDriver.toBlocking(timeout: 1).first(), "0 GBP")
-        XCTAssertEqual(try showAddToSavingsButtonDriver.toBlocking(timeout: 1).first(), false)
-    }
-    
-    func testTotalRoundUpAmountWhenRoundUpAmountIsZero() {
+    func testRoundUpSectionWhenRoundUpAmountIsZero() {
         mockRepository = MockStarlingRepositoryZeroRoundUp()
         sut = TransactionsViewModel(repository: mockRepository)
         sut.loadAccountTransactions()
         let roundUpAmountDriver = sut.totalRoundUpAmount.asObservable().subscribe(on: scheduler)
-        let showAddToSavingsButtonDriver = sut.showAddToSavingsButton.asObservable().subscribe(on: scheduler)
-        XCTAssertEqual(try roundUpAmountDriver.toBlocking(timeout: 1).first(), "0 GBP")
-        XCTAssertEqual(try showAddToSavingsButtonDriver.toBlocking(timeout: 1).first(), false)
+        let showRoundUpSection = sut.showRoundUpSection.asObservable().subscribe(on: scheduler)
+        XCTAssertEqual(try showRoundUpSection.toBlocking(timeout: 1).first(), false)
+        XCTAssertNil(try roundUpAmountDriver.toBlocking(timeout: 1).first()!)
+    }
+    
+    func testRoundUpSectionWhenNoTransactions() {
+        mockRepository = MockStarlingRepositoryEmptyData()
+        sut = TransactionsViewModel(repository: mockRepository)
+        sut.loadAccountTransactions()
+        let roundUpAmountDriver = sut.totalRoundUpAmount.asObservable().subscribe(on: scheduler)
+        let showRoundUpSection = sut.showRoundUpSection.asObservable().subscribe(on: scheduler)
+        XCTAssertEqual(try showRoundUpSection.toBlocking(timeout: 1).first(), false)
+        XCTAssertNil(try roundUpAmountDriver.toBlocking(timeout: 1).first()!)
     }
     
     func testAddToSavingsButtonTitle() {

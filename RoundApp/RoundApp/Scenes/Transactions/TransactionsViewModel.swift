@@ -23,8 +23,8 @@ class TransactionsViewModel {
         return _roundUpSectionTitle.asDriver()
     }
     
-    private let _totalRoundUpAmount = BehaviorRelay<String>(value: "")
-    var totalRoundUpAmount: Driver<String> {
+    private let _totalRoundUpAmount = BehaviorRelay<String?>(value: nil)
+    var totalRoundUpAmount: Driver<String?> {
         return _totalRoundUpAmount.asDriver()
     }
     
@@ -33,14 +33,19 @@ class TransactionsViewModel {
         return _addToSavingsButtonTitle.asDriver()
     }
     
-    private let _showAddToSavingsButton = BehaviorRelay<Bool>(value: false)
-    var showAddToSavingsButton: Driver<Bool> {
-        return _showAddToSavingsButton.asDriver()
+    private let _showRoundUpSection = BehaviorRelay<Bool>(value: false)
+    var showRoundUpSection: Driver<Bool> {
+        return _showRoundUpSection.asDriver()
     }
     
     private let _transactions = BehaviorRelay<[FeedItem]>(value: [])
     var transactions: Driver<[FeedItem]> {
         return _transactions.asDriver()
+    }
+    
+    private let _showLoading = BehaviorRelay<Bool>(value: false)
+    var showLoading: Driver<Bool> {
+        return _showLoading.asDriver()
     }
     
     // MARK: - Inputs
@@ -79,7 +84,7 @@ class TransactionsViewModel {
     }
     
     func loadAccountTransactions() {
-        // TODO: Add loading
+        _showLoading.accept(true)
         repository.getPrimaryAccount()
             .flatMap { account -> Single<[FeedItem]> in
                 self._screenTitle.accept("\(account.name) Account")
@@ -91,17 +96,15 @@ class TransactionsViewModel {
                 switch event {
                 case .success(let transactions):
                     if transactions.isEmpty {
-                        self._totalRoundUpAmount.accept("0 GBP")
-                        self._showAddToSavingsButton.accept(false)
+                        self._showRoundUpSection.accept(false)
                         // TODO: Show empty state
                     } else {
                         self.roundUpAmount = self.calculateRoundUpAmount(transactions: transactions)
                         if let roundUpAmount = self.roundUpAmount, roundUpAmount != 0.00 {
                             self._totalRoundUpAmount.accept("\(roundUpAmount) GBP")
-                            self._showAddToSavingsButton.accept(true)
+                            self._showRoundUpSection.accept(true)
                         } else {
-                            self._totalRoundUpAmount.accept("0 GBP")
-                            self._showAddToSavingsButton.accept(false)
+                            self._showRoundUpSection.accept(false)
                         }
                     }
                     self._transactions.accept(transactions)
@@ -109,6 +112,7 @@ class TransactionsViewModel {
                     // TODO: Handle error
                     print(error)
                 }
+                self._showLoading.accept(false)
             }
             .disposed(by: disposeBag)
     }
