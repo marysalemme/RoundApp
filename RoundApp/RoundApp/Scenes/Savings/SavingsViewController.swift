@@ -176,7 +176,7 @@ class SavingsViewController: UIViewController {
         createNewGoalButton.rx.tapGesture()
             .when(.recognized)
             .subscribe(onNext: { [weak self] _ in
-                self?.viewModel.createNewSavingGoal()
+                self?.viewModel.createNewSavingsGoal()
             })
             .disposed(by: disposeBag)
         

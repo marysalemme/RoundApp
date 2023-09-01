@@ -28,14 +28,6 @@ final class SavingsViewModelTests: XCTestCase {
         XCTAssertEqual(try driver.toBlocking(timeout: 1).first(), "Saving Goals")
     }
     
-//    func testSavingGoal() {
-//        sut.createNewSavingGoal()
-//        let titleDriver = sut.savingsGoalTitle.asObservable().subscribe(on: scheduler)
-//        let savedDriver = sut.savingsGoalTotalSaved.asObservable().subscribe(on: scheduler)
-//        XCTAssertEqual(try titleDriver.toBlocking(timeout: 1).first(), "Round Up")
-//        XCTAssertEqual(try savedDriver.toBlocking(timeout: 1).first(), "GBP 0/2000")
-//    }
-//
     func testEmptyView() {
         mockRepository = MockStarlingRepositoryEmptyData()
         sut = SavingsViewModel(roundUpAmount: 12345, accountID: "asdhas-asdhaskd-asjdgajsd", repository: mockRepository)
@@ -46,5 +38,19 @@ final class SavingsViewModelTests: XCTestCase {
         XCTAssertEqual(try emptyViewDriver.toBlocking(timeout: 1).first(), true)
         XCTAssertEqual(try textDriver.toBlocking(timeout: 1).first(), "You have no saving goals")
         XCTAssertEqual(try buttonTextDriver.toBlocking(timeout: 1).first(), "Create a new saving goal")
+    }
+    
+    func testCreateNewSavingGoal() {
+        mockRepository = MockStarlingRepositoryEmptyData()
+        sut = SavingsViewModel(roundUpAmount: 12345, accountID: "asdhas-asdhaskd-asjdgajsd", repository: mockRepository)
+        sut.loadSavingGoals()
+        let emptyViewDriver = sut.showEmptyView.asObservable().subscribe(on: scheduler)
+        let textDriver = sut.savingsGoalTitle.asObservable().subscribe(on: scheduler)
+        let totalSavedDriver = sut.savingsGoalTotalSaved.asObservable().subscribe(on: scheduler)
+        XCTAssertEqual(try emptyViewDriver.toBlocking(timeout: 1).first(), true)
+        sut.createNewSavingsGoal()
+        XCTAssertEqual(try emptyViewDriver.toBlocking(timeout: 1).first(), false)
+        XCTAssertEqual(try textDriver.toBlocking(timeout: 1).first(), "Round Up")
+        XCTAssertEqual(try totalSavedDriver.toBlocking(timeout: 1).first(), "0/2000")
     }
 }

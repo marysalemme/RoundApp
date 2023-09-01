@@ -13,7 +13,9 @@ protocol StarlingAPIClientType {
     
     func getTransactions(accountID: String, categoryID: String, sinceDate: String) async throws -> [FeedItem]
     
-    func getSavingGoals(accountID: String) async throws -> [SavingsGoal]
+    func getSavingsGoals(accountID: String) async throws -> [SavingsGoal]
+    
+    func getSavingsGoal(accountID: String, savingsGoalID: String) async throws -> SavingsGoal
     
     func createSavingGoal(accountID: String, goal: SavingsGoal) async throws -> SavingsGoalCreated
     
@@ -34,6 +36,7 @@ class StarlingAPIClient: StarlingAPIClientType {
         case accounts
         case transactions(accountID: String, categoryID: String)
         case savingGoals(accountID: String)
+        case savingsGoal(accountID: String, savingsGoalID: String)
         case addToSavingGoal(accountID: String, savingsGoalID: String, transferID: String)
         
         var value: String {
@@ -44,6 +47,8 @@ class StarlingAPIClient: StarlingAPIClientType {
                 return "feed/account/\(accountID)/category/\(categoryID)"
             case let .savingGoals(accountID):
                 return "account/\(accountID)/savings-goals"
+            case let .savingsGoal(accountID, savingsGoalID):
+                return "account/\(accountID)/savings-goals/\(savingsGoalID)"
             case let .addToSavingGoal(accountID, savingsGoalID, transferID):
                 return "account/\(accountID)/savings-goals/\(savingsGoalID)/add-money/\(transferID)"
             }
@@ -78,11 +83,21 @@ class StarlingAPIClient: StarlingAPIClientType {
         }
     }
     
-    func getSavingGoals(accountID: String) async throws -> [SavingsGoal] {
+    func getSavingsGoals(accountID: String) async throws -> [SavingsGoal] {
         let data = try await loadData(for: .savingGoals(accountID: accountID))
         do {
             let decoder = JSONDecoder()
             return try decoder.decode(SavingsGoalsResponse.self, from: data).savingsGoalList
+        } catch {
+            throw NetworkError.invalidData
+        }
+    }
+    
+    func getSavingsGoal(accountID: String, savingsGoalID: String) async throws -> SavingsGoal {
+        let data = try await loadData(for: .savingsGoal(accountID: accountID, savingsGoalID: savingsGoalID))
+        do {
+            let decoder = JSONDecoder()
+            return try decoder.decode(SavingsGoal.self, from: data)
         } catch {
             throw NetworkError.invalidData
         }

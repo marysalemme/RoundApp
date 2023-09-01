@@ -31,7 +31,7 @@ class MockStarlingRepository: StarlingRepositoryType {
         ])
     }
     
-    func getSavingGoals(accountID: String) -> Single<[SavingsGoal]> {
+    func getSavingsGoals(accountID: String) -> Single<[SavingsGoal]> {
         return .just([SavingsGoal(savingsGoalUid: "123",
                                   name: "Round Up",
                                   currency: nil,
@@ -41,6 +41,16 @@ class MockStarlingRepository: StarlingRepositoryType {
                                   state: "ACTIVE")])
     }
     
+    func getSavingsGoal(accountID: String, savingsGoalID: String) -> Single<SavingsGoal> {
+        return .just(SavingsGoal(savingsGoalUid: "123",
+                                 name: "Round Up",
+                                 currency: nil,
+                                 target: Target(currency: "GBP", minorUnits: 200000),
+                                 totalSaved: nil,
+                                 savedPercentage: nil,
+                                 state: "ACTIVE"))
+    }
+    
     func createSavingGoal(accountID: String, goal: SavingsGoal) -> Single<SavingsGoalCreated> {
         return .just(SavingsGoalCreated(savingsGoalUid: "123", success: true))
     }
@@ -52,60 +62,20 @@ class MockStarlingRepository: StarlingRepositoryType {
     }
 }
 
-class MockStarlingRepositoryEmptyData: StarlingRepositoryType {
-    func getPrimaryAccount() -> Single<Account> {
-        return Single.just(Account(accountUid: "123",
-                                   accountType: "PRIMARY",
-                                   defaultCategory: "123123",
-                                   currency: "GBP",
-                                   name: "Personal"))
-    }
-    
-    func getTransactions(accountID: String, categoryID: String, sinceDate: String) -> Single<[FeedItem]> {
+class MockStarlingRepositoryEmptyData: MockStarlingRepository {
+    override func getTransactions(accountID: String, categoryID: String, sinceDate: String) -> Single<[FeedItem]> {
         return Single.just([])
     }
     
-    func getSavingGoals(accountID: String) -> Single<[SavingsGoal]> {
+    override func getSavingsGoals(accountID: String) -> Single<[SavingsGoal]> {
         return .just([])
-    }
-    
-    func createSavingGoal(accountID: String, goal: SavingsGoal) -> Single<SavingsGoalCreated> {
-        return .just(SavingsGoalCreated(savingsGoalUid: "123", success: true))
-    }
-    
-    func addMoneyToSavingGoal(accountID: String,
-                              savingsGoalID: String,
-                              transferRequest: RoundApp.SavingsGoalTransferRequest) -> RxSwift.Single<RoundApp.SavingsGoalTransfer> {
-        return .just(SavingsGoalTransfer(transferUid: "123", success: true))
     }
 }
 
-class MockStarlingRepositoryZeroRoundUp: StarlingRepositoryType {
-    func getPrimaryAccount() -> Single<Account> {
-        return Single.just(Account(accountUid: "123",
-                                   accountType: "PRIMARY",
-                                   defaultCategory: "123123",
-                                   currency: "GBP",
-                                   name: "Personal"))
-    }
-    
-    func getTransactions(accountID: String, categoryID: String, sinceDate: String) -> Single<[FeedItem]> {
+class MockStarlingRepositoryZeroRoundUp: MockStarlingRepository {
+    override func getTransactions(accountID: String, categoryID: String, sinceDate: String) -> Single<[FeedItem]> {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
         return Single.just([FeedItem(feedItemUid: "123", categoryUid: "123123", amount: Amount(currency: "GBP", minorUnits: 2300), direction: "OUT", transactionTime:  dateFormatter.date(from: "2023-08-19T12:37:14.893Z")!)])
-    }
-    
-    func getSavingGoals(accountID: String) -> Single<[SavingsGoal]> {
-        return .just([])
-    }
-    
-    func createSavingGoal(accountID: String, goal: SavingsGoal) -> Single<SavingsGoalCreated> {
-        return .just(SavingsGoalCreated(savingsGoalUid: "123", success: true))
-    }
-    
-    func addMoneyToSavingGoal(accountID: String,
-                              savingsGoalID: String,
-                              transferRequest: RoundApp.SavingsGoalTransferRequest) -> RxSwift.Single<RoundApp.SavingsGoalTransfer> {
-        return .just(SavingsGoalTransfer(transferUid: "123", success: true))
     }
 }

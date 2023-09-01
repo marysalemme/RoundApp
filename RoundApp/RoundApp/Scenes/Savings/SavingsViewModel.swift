@@ -48,9 +48,14 @@ class SavingsViewModel {
         return _addMoneyButtonTitle.asDriver()
     }
     
+    private let _roundUpAmount = BehaviorRelay<Int>(value: 0)
+    var roundUpAmount: Driver<Int> {
+        return _roundUpAmount.asDriver()
+    }
+    
     // MARK: - Inputs
     
-    func createNewSavingGoal() {
+    func createNewSavingsGoal() {
         // TODO: NiceToHave - Remove hard coded creation and navigate to new screen to create saving goal
         let goal = SavingsGoal(savingsGoalUid: nil,
                                name: "Round Up",
@@ -60,10 +65,15 @@ class SavingsViewModel {
                                savedPercentage: nil,
                                state: nil)
         repository.createSavingGoal(accountID: accountID, goal: goal)
+            .flatMap { goalCreated -> Single<SavingsGoal> in
+                return self.repository.getSavingsGoal(accountID: self.accountID, savingsGoalID: goalCreated.savingsGoalUid)
+            }
             .subscribe { event in
                 switch event {
-                case .success(let goalCreated):
-                    self.savingsGoalId = goalCreated.savingsGoalUid
+                case .success(let savingsGoal):
+                    self.savingsGoalId = savingsGoal.savingsGoalUid
+                    self.updateSavingsGoalBindings(for: savingsGoal)
+                    self._showEmptyView.accept(false)
                 case .failure(let error):
                     // Handle error
                     print(error)
@@ -77,19 +87,23 @@ class SavingsViewModel {
             assertionFailure("Attempted to add money to saving goal without a saving goal ID")
             return
         }
-        let transferRequest = SavingsGoalTransferRequest(amount: Amount(currency: "GBP", minorUnits: roundUpAmount))
+        let transferRequest = SavingsGoalTransferRequest(amount: Amount(currency: "GBP", minorUnits: _roundUpAmount.value))
         repository.addMoneyToSavingGoal(accountID: accountID, savingsGoalID: savingsGoalId, transferRequest: transferRequest)
+            .flatMap { _ -> Single<SavingsGoal> in
+                return self.repository.getSavingsGoal(accountID: self.accountID, savingsGoalID: savingsGoalId)
+            }
             .subscribe { event in
                 switch event {
-                case .success(let transfer):
-                    print(transfer)
+                case .success(let savingsGoal):
+                    self.updateSavingsGoalBindings(for: savingsGoal)
+                    self._roundUpAmount.accept(0)
+                    self._showEmptyView.accept(false)
                 case .failure(let error):
                     // Handle error
                     print(error)
                 }
             }
             .disposed(by: disposeBag)
-    
     }
     
     // MARK: - Dependencies
@@ -97,8 +111,6 @@ class SavingsViewModel {
     weak var coordinator: MainCoordinator?
     
     private let repository: StarlingRepositoryType
-    
-    private let roundUpAmount: Int
     
     private let accountID: String
     
@@ -108,14 +120,14 @@ class SavingsViewModel {
     
     // MARK: - Initializer
     init(roundUpAmount: Int, accountID: String, repository: StarlingRepositoryType) {
-        self.roundUpAmount = roundUpAmount
         self.accountID = accountID
         self.repository = repository
+        self._roundUpAmount.accept(roundUpAmount)
     }
     
     func loadSavingGoals() {
         repository
-            .getSavingGoals(accountID: accountID)
+            .getSavingsGoals(accountID: accountID)
             .subscribe { event in
                 switch event {
                 case .success(let savingsGoals):
@@ -123,7 +135,7 @@ class SavingsViewModel {
                         self._showEmptyView.accept(true)
                     } else {
                         guard let savingsGoal = savingsGoals.first else { return }
-                        self.setupSavingsGoalBindings(for: savingsGoal)
+                        self.updateSavingsGoalBindings(for: savingsGoal)
                         self.savingsGoalId = savingsGoal.savingsGoalUid
                         self._showEmptyView.accept(false)
                     }
@@ -135,7 +147,7 @@ class SavingsViewModel {
             .disposed(by: disposeBag)
     }
     
-    private func setupSavingsGoalBindings(for goal: SavingsGoal) {
+    private func updateSavingsGoalBindings(for goal: SavingsGoal) {
         self._savingsGoalTitle.accept(goal.name)
         self._savingsGoalTotalSaved.accept("\(goal.target.currency) \(goal.totalSaved?.minorUnits.toDecimal() ?? 0.0)/\(goal.target.minorUnits.toDecimal())")
     }

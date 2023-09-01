@@ -16,6 +16,7 @@ extension Decimal {
     }
     
     func toInt() -> Int {
-        return NSDecimalNumber(decimal: self).intValue
+        let scaledDecimal = self * Decimal(100)
+        return NSDecimalNumber(decimal: scaledDecimal).intValue
     }
 }

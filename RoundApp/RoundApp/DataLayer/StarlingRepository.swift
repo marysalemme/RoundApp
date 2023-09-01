@@ -14,7 +14,9 @@ protocol StarlingRepositoryType {
     
     func getTransactions(accountID: String, categoryID: String, sinceDate: String) -> Single<[FeedItem]>
     
-    func getSavingGoals(accountID: String) -> Single<[SavingsGoal]>
+    func getSavingsGoals(accountID: String) -> Single<[SavingsGoal]>
+    
+    func getSavingsGoal(accountID: String, savingsGoalID: String) -> Single<SavingsGoal>
     
     func createSavingGoal(accountID: String, goal: SavingsGoal) -> Single<SavingsGoalCreated>
     
@@ -69,12 +71,27 @@ class StarlingRepository: StarlingRepositoryType {
     }
     
     /// Returns the saving goals for the given account.
-    func getSavingGoals(accountID: String) -> Single<[SavingsGoal]> {
+    func getSavingsGoals(accountID: String) -> Single<[SavingsGoal]> {
         return Single<[SavingsGoal]>.create { [unowned self] single in
             Task {
                 do {
-                    let savingsGoals = try await apiClient.getSavingGoals(accountID: accountID)
+                    let savingsGoals = try await apiClient.getSavingsGoals(accountID: accountID)
                     single(.success(savingsGoals))
+                } catch {
+                    single(.failure(error))
+                }
+            }
+            return Disposables.create()
+        }
+    }
+    
+    /// Returns the saving goal for the given account and saving goal ID.
+    func getSavingsGoal(accountID: String, savingsGoalID: String) -> Single<SavingsGoal> {
+        return Single<SavingsGoal>.create { [unowned self] single in
+            Task {
+                do {
+                    let savingsGoal = try await apiClient.getSavingsGoal(accountID: accountID, savingsGoalID: savingsGoalID)
+                    single(.success(savingsGoal))
                 } catch {
                     single(.failure(error))
                 }
