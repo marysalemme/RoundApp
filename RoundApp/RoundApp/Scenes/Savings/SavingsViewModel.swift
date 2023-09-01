@@ -48,14 +48,25 @@ class SavingsViewModel {
         return _addMoneyButtonTitle.asDriver()
     }
     
+    private let _showSavingsGoal = BehaviorRelay<Bool>(value: false)
+    var showSavingsGoal: Driver<Bool> {
+        return _showSavingsGoal.asDriver()
+    }
+    
     private let _roundUpAmount = BehaviorRelay<Int>(value: 0)
     var roundUpAmount: Driver<Int> {
         return _roundUpAmount.asDriver()
     }
     
+    private let _showLoading = BehaviorRelay<Bool>(value: false)
+    var showLoading: Driver<Bool> {
+        return _showLoading.asDriver()
+    }
+    
     // MARK: - Inputs
     
     func createNewSavingsGoal() {
+        _showLoading.accept(true)
         // TODO: NiceToHave - Remove hard coded creation and navigate to new screen to create saving goal
         let goal = SavingsGoal(savingsGoalUid: nil,
                                name: "Round Up",
@@ -73,16 +84,21 @@ class SavingsViewModel {
                 case .success(let savingsGoal):
                     self.savingsGoalId = savingsGoal.savingsGoalUid
                     self.updateSavingsGoalBindings(for: savingsGoal)
+                    self._showSavingsGoal.accept(true)
                     self._showEmptyView.accept(false)
                 case .failure(let error):
                     // Handle error
+                    self._showSavingsGoal.accept(false)
+                    self._showEmptyView.accept(false)
                     print(error)
                 }
+                self._showLoading.accept(false)
             }
             .disposed(by: disposeBag)
     }
     
     func addRoundUpMoney() {
+        _showLoading.accept(true)
         guard let savingsGoalId = savingsGoalId else {
             assertionFailure("Attempted to add money to saving goal without a saving goal ID")
             return
@@ -97,11 +113,15 @@ class SavingsViewModel {
                 case .success(let savingsGoal):
                     self.updateSavingsGoalBindings(for: savingsGoal)
                     self._roundUpAmount.accept(0)
+                    self._showSavingsGoal.accept(true)
                     self._showEmptyView.accept(false)
                 case .failure(let error):
                     // Handle error
+                    self._showSavingsGoal.accept(false)
+                    self._showEmptyView.accept(false)
                     print(error)
                 }
+                self._showLoading.accept(false)
             }
             .disposed(by: disposeBag)
     }
@@ -126,6 +146,7 @@ class SavingsViewModel {
     }
     
     func loadSavingGoals() {
+        _showLoading.accept(true)
         repository
             .getSavingsGoals(accountID: accountID)
             .subscribe { event in
@@ -133,22 +154,27 @@ class SavingsViewModel {
                 case .success(let savingsGoals):
                     if savingsGoals.isEmpty {
                         self._showEmptyView.accept(true)
+                        self._showSavingsGoal.accept(false)
                     } else {
                         guard let savingsGoal = savingsGoals.first else { return }
                         self.updateSavingsGoalBindings(for: savingsGoal)
                         self.savingsGoalId = savingsGoal.savingsGoalUid
                         self._showEmptyView.accept(false)
+                        self._showSavingsGoal.accept(true)
                     }
                 case .failure(let error):
                     // TODO: Handle error
                     print(error)
+                    self._showSavingsGoal.accept(false)
+                    self._showEmptyView.accept(false)
                 }
+                self._showLoading.accept(false)
             }
             .disposed(by: disposeBag)
     }
     
     private func updateSavingsGoalBindings(for goal: SavingsGoal) {
-        self._savingsGoalTitle.accept(goal.name)
-        self._savingsGoalTotalSaved.accept("\(goal.target.currency) \(goal.totalSaved?.minorUnits.toDecimal() ?? 0.0)/\(goal.target.minorUnits.toDecimal())")
+        _savingsGoalTitle.accept(goal.name)
+        _savingsGoalTotalSaved.accept("\(goal.target.currency) \(goal.totalSaved?.minorUnits.toDecimal() ?? 0.0)/\(goal.target.minorUnits.toDecimal())")
     }
 }

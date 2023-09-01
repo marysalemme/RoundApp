@@ -30,6 +30,8 @@ class SavingsViewController: UIViewController {
 
     let addMoneyButton: UIButton
     
+    var activityIndicator: UIActivityIndicatorView
+    
     // MARK: - Properties
     
     /// The `SavingsViewModel` that the view controller will use to fetch data from the Starling API.
@@ -37,7 +39,7 @@ class SavingsViewController: UIViewController {
     
     var disposeBag = DisposeBag()
     
-    // MARK: - Initializer
+    // MARK: - Initializers
     
     /// Initialises the view controller with a `SavingsViewModel`.
     ///
@@ -50,6 +52,7 @@ class SavingsViewController: UIViewController {
         self.savingsGoalTitle = UILabel(frame: .zero)
         self.savingsGoalTotalSaved = UILabel(frame: .zero)
         self.addMoneyButton = UIButton(frame: .zero)
+        self.activityIndicator = UIActivityIndicatorView(style: .large)
 //        self.savingsGoalTarget = UIProgressView(progressViewStyle: .default)
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -99,6 +102,10 @@ class SavingsViewController: UIViewController {
         addMoneyButton.backgroundColor = .systemBackground
         addMoneyButton.layer.cornerRadius = 20
         savingsGoalView.addSubview(addMoneyButton)
+        
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicator.hidesWhenStopped = true
+        view.addSubview(activityIndicator)
     }
     
     private func setupConstraints() {
@@ -139,9 +146,15 @@ class SavingsViewController: UIViewController {
             make.bottom.equalToSuperview().inset(20)
             make.height.greaterThanOrEqualTo(50)
         }
+        activityIndicator.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+        }
     }
     
     private func setupBindings() {
+        
+        // MARK: - Inputs
+
         viewModel.screenTitle
             .drive(navigationItem.rx.title)
             .disposed(by: disposeBag)
@@ -156,8 +169,15 @@ class SavingsViewController: UIViewController {
         
         viewModel.showEmptyView
             .drive(onNext: { [weak self] showEmptyView in
-                self?.savingsGoalView.isHidden = showEmptyView
                 self?.noSavingGoalsView.isHidden = !showEmptyView
+                self?.savingsGoalView.isHidden = showEmptyView
+            })
+            .disposed(by: disposeBag)
+        
+        viewModel.showSavingsGoal
+            .drive(onNext: { [weak self] showSavingsGoal in
+                self?.savingsGoalView.isHidden = !showSavingsGoal
+                self?.noSavingGoalsView.isHidden = showSavingsGoal
             })
             .disposed(by: disposeBag)
         
@@ -172,6 +192,14 @@ class SavingsViewController: UIViewController {
         viewModel.addMoneyButtonTitle
             .drive(addMoneyButton.rx.title())
             .disposed(by: disposeBag)
+        
+        viewModel.showLoading
+            .drive(onNext: { [weak self] showLoading in
+                showLoading ? self?.activityIndicator.startAnimating() : self?.activityIndicator.stopAnimating()
+            })
+            .disposed(by: disposeBag)
+        
+        // MARK: - Outputs
         
         createNewGoalButton.rx.tapGesture()
             .when(.recognized)

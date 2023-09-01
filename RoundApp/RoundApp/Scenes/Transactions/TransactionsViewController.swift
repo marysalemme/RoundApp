@@ -34,6 +34,8 @@ class TransactionsViewController: UIViewController {
     
     var disposeBag = DisposeBag()
     
+    // MARK: - Initializers
+
     /// Initializes a `TransactionsViewController` with a `TransactionsViewModel`.
     init(viewModel: TransactionsViewModel) {
         self.roundUpContainer = ContainerView(frame: .zero)
@@ -53,6 +55,8 @@ class TransactionsViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - View controller lifecycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.loadAccountTransactions()
